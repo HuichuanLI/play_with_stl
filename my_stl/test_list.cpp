@@ -6,4 +6,8 @@
 using namespace std;
 int main() {
   list<int> mylist;
+  int arr[5] = {1, 2, 3, 4, 5};
+  for (int i = 0; i < 5; i++) {
+    mylist.push_back(i);
+  }
 }
