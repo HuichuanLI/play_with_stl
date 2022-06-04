@@ -39,12 +39,10 @@ class list {
   }
   void push_back(const _Ty &v) {
 
-    _Nodeptr _S = _Buynode();
+    _Nodeptr _S = _Buynode(_Head, _Acc::_Prev(_Head));
     _S->_Value = v;
-    _S->_Prev = _Head->_Prev;
-    _Head->_Prev->_Next = _S;
-    _S->_Next = _Head;
-    _Head->_Next = _S;
+    _Acc::_Next(_Acc::_Prev(_S)) = _S;
+    _Acc::_Prev(_Head) = _S;
     _Size++;
 
   }
@@ -58,8 +56,8 @@ class list {
     //_Nodeptr _S = (_Nodeptr)operator new(sizeof(_Node));
     //_Nodeptr _S = (_Nodeptr)allocator.allocate(1, 0);
     assert(_S != NULL);
-    _S->_Next = _Narg != 0 ? _Narg : _S;
-    _S->_Prev = _Parg != 0 ? _Parg : _S;
+    _Acc::_Next(_S) = _Narg != 0 ? _Narg : _S;
+    _Acc::_Prev(_S) = _Parg != 0 ? _Parg : _S;
     return _S;
   }
 
