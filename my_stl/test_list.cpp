@@ -5,35 +5,51 @@
 #include <iostream>
 using namespace std;
 int main() {
-  list<int> mylist;
-  int arr[5] = {1, 2, 3, 4, 5};
-  for (int i = 0; i < 5; i++) {
-    mylist.push_back(i);
-  }
+//  list<int> mylist;
+//  int arr[5] = {1, 2, 3, 4, 5};
+//  for (int i = 0; i < 5; i++) {
+//    mylist.push_back(i);
+//  }
+//
+//  list<int>::iterator it = mylist.begin();
+//  while (it != mylist.end()) {
+//    cout << *it << " ";
+//    ++it;
+//  }
+//  cout << endl;
+//
+//  mylist.insert(mylist.end(), 10, 2);
+//  it = mylist.begin();
+//  while (it != mylist.end()) {
+//    cout << *it << " ";
+//    it++; //it++
+//  }
+//  mylist.clear();
+//  cout << endl;
+//  mylist.insert(mylist.end(), arr, arr + 5);
+//  it = mylist.begin();
+//  while (it != mylist.end()) {
+//    cout << *it << " ";
+//    it++; //it++
+//  }
+//  cout << mylist.front() << endl;
+//  cout << mylist.back() << endl;
 
-  list<int>::iterator it = mylist.begin();
-  while (it != mylist.end()) {
-    cout << *it << " ";
-    ++it;
+  int ar[] = {1, 2, 3, 2, 2, 2, 2, 2, 2, 4, 2, 5};
+  int br[5] = {6, 7, 8, 9, 10};
+
+  int n = sizeof(ar) / sizeof(int);
+  list<int> mylist2(ar, ar + n);
+  list<int> youlist(br, br + 5);
+
+  mylist2.splice(mylist2.end(), youlist);
+
+  list<int>::iterator it2 = mylist2.begin();
+  while (it2 != mylist2.end()) {
+    cout << *it2 << " ";
+    ++it2;
   }
   cout << endl;
-
-  mylist.insert(mylist.end(), 10, 2);
-  it = mylist.begin();
-  while (it != mylist.end()) {
-    cout << *it << " ";
-    it++; //it++
-  }
-  mylist.clear();
-  cout << endl;
-  mylist.insert(mylist.end(), arr, arr + 5);
-  it = mylist.begin();
-  while (it != mylist.end()) {
-    cout << *it << " ";
-    it++; //it++
-  }
-  cout << mylist.front() << endl;
-  cout << mylist.back() << endl;
 
 }
 

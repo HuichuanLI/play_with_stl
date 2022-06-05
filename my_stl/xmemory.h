@@ -63,4 +63,11 @@ class myallocator {
   }
 };
 
+template<class _Ty, class _U>
+inline
+bool operator==(const myallocator<_Ty> &, const myallocator<_U> &) { return (true); }
+
+template<class _Ty, class _U>
+inline
+bool operator!=(const myallocator<_Ty> &, const myallocator<_U> &) { return (false); }
 #endif //PLAY_WITH_ALGO_MY_STL_X_MEMORY_H_

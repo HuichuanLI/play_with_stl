@@ -15,6 +15,7 @@ class list {
  public:
   struct _Node;
   typedef _Node *_Nodeptr;
+  typedef list<_Ty, _A> _Myt;
 
   struct _Node {
     _Nodeptr _Next, _Prev;
@@ -180,6 +181,47 @@ class list {
     insert(begin(), _N, _X);
   }
 
+  void splice(iterator _P, _Myt &_X) {
+    if (!_X.empty()) {
+      _Splice(_P, _X, _X.begin(), _X.end());
+      _Size += _X._Size;
+      _X._Size = 0;
+    }
+  }
+
+  void remove(const _Ty &_V) {
+    iterator _L = end();
+    for (iterator _F = begin(); _F != _L;)
+      if (*_F == _V)
+        erase(_F++);
+      else
+        ++_F;
+  }
+  void unique() {
+    iterator _F = begin(), _L = end();
+    if (_F != _L) {
+      for (iterator _M = _F; ++_M != _L; _M = _F) {
+        if (*_F == *_M)
+          erase(_M);
+        else
+          _F = _M;
+      }
+    }
+  }
+
+  void reverse() {
+    if (size() >= 2) {
+      iterator _L = end();
+      for (iterator _F = ++begin(); _F != _L;) {
+        iterator _M = _F;
+        _Splice(begin(), *this, _M, ++_F);
+      }
+    }
+  }
+
+ public:
+  void merge(_Myt &_X);
+  void sort();
  protected:
   //_Narg  next argument  _Parg prev argument
   _Nodeptr _Buynode(_Nodeptr _Narg = 0, _Nodeptr _Parg = 0) {
@@ -210,6 +252,20 @@ class list {
   void _Freenode(_Nodeptr _S) {
     allocator.deallocate(_S, 1);
     //operatror delete(_S);
+  }
+  void _Splice(iterator _P, _Myt &_X, iterator _F, iterator _L) {
+    if (allocator == _X.allocator) {
+      _Acc::_Next(_Acc::_Prev(_L._Mynode())) = _P._Mynode();
+      _Acc::_Next(_Acc::_Prev(_F._Mynode())) = _L._Mynode();
+      _Acc::_Next(_Acc::_Prev(_P._Mynode())) = _F._Mynode();
+      _Nodeptr _S = _Acc::_Prev(_P._Mynode());
+      _Acc::_Prev(_P._Mynode()) = _Acc::_Prev(_L._Mynode());
+      _Acc::_Prev(_L._Mynode()) = _Acc::_Prev(_F._Mynode());
+      _Acc::_Prev(_F._Mynode()) = _S;
+    } else {
+      insert(_P, _F, _L);
+      _X.erase(_F, _L);
+    }
   }
 
  private:
