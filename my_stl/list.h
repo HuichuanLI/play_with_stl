@@ -8,9 +8,9 @@
 #include <cstdlib>
 #include <assert.h>
 #include <iostream>
-using namespace std;
+#include "xmemory.h"
 
-template<class _Ty>
+template<class _Ty, class _A=myallocator<_Ty>>
 class list {
  public:
   struct _Node;
@@ -29,14 +29,13 @@ class list {
     static _Vref _Value(_Nodeptr _P) { return ((_Vref) (*_P)._Value); }
   };
 
-  typedef size_t size_type;
+  typedef std::size_t size_type;
   typedef _Ty value;
   typedef _Ty *pointer;
   typedef _Ty &reference;
   typedef const _Ty *const_pointer;
   typedef const _Ty &const_reference;
   typedef int difference_type;
-  typedef const_iterator _It;
   class const_iterator {
    public:
     const_iterator() {}
@@ -104,6 +103,7 @@ class list {
     bool operator==(const iterator &_X) const { return this->_Ptr == _X._Ptr; }
     bool operator!=(const iterator &_X) const { return !(*this == _X); }
   };
+  typedef const_iterator _It;
 
  public:
   explicit list() : _Head(_Buynode()), _Size(0) {}
@@ -112,7 +112,7 @@ class list {
   list(_It _F, _It _L) : _Head(_Buynode()), _Size(0) { insert(begin(), _F, _L); }
   ~list() {
     erase(begin(), end());
-    _Freenode(_Head);
+    _Freenode (_Head);
     _Head = 0;
     _Size = 0;
   }
@@ -126,7 +126,7 @@ class list {
   void push_front(const _Ty &v) { insert(begin(), v); }
   void pop_back() { erase(--end()); }
   void pop_front() { erase(begin()); }
-  
+
 //  iterator begin() { return iterator(_Acc::_Next(_Head)); }
   iterator begin() const {
     return iterator(_Acc::_Next(_Head));
@@ -143,8 +143,8 @@ class list {
     _Acc::_Next(_Acc::_Prev(_S)) = _S;
 
     /////////////////////////
-    _Acc::_Value(_S) = _X;
-    //allocator.construct(&_Acc::_Value(_S), _X);
+    // _Acc::_Value(_S) = _X;
+    allocator.construct(&_Acc::_Value(_S), _X);
     /////////////////////////
     _Size++;
     return iterator(_S);
@@ -163,20 +163,6 @@ class list {
       insert(_P, *_F);
   }
 
-  iterator erase(iterator _P) {
-    _Nodeptr _S = (_P++)._Mynode();
-    _Acc::_Next(_Acc::_Prev(_S)) = _Acc::_Next(_S);
-    _Acc::_Prev(_Acc::_Next(_S)) = _Acc::_Prev(_S);
-
-    /////////////////////
-    free(_S);
-    // allocator.destroy(&_Acc::_Value(_S)); //destroy object
-    _Freenode(_S);
-    /////////////////////
-    --_Size;
-    return _P;
-  }
-
   iterator erase(iterator _F, iterator _L) {
     while (_F != _L)
       erase(_F++);
@@ -184,19 +170,49 @@ class list {
   }
   void clear() { erase(begin(), end()); }
 
+  void assign(_It _F, _It L) {
+    erase(begin(), end());
+    insert(_F, L);
+  }
+  void assgin(size_type _N, const _Ty &_X = _Ty()) {
+    erase(begin(), end());
+    insert(begin(), _N, _X);
+  }
+
  protected:
   //_Narg  next argument  _Parg prev argument
   _Nodeptr _Buynode(_Nodeptr _Narg = 0, _Nodeptr _Parg = 0) {
     //_Nodeptr _S = (_Nodeptr) malloc(sizeof(_Node));
-    _Nodeptr _S = (_Nodeptr) malloc(sizeof(_Node));
+//    _Nodeptr _S = (_Nodeptr) malloc(sizeof(_Node));
     //_Nodeptr _S = (_Nodeptr)operator new(sizeof(_Node));
-    //_Nodeptr _S = (_Nodeptr)allocator.allocate(1, 0);
+    _Nodeptr _S = (_Nodeptr) allocator._Charalloc(sizeof(_Node));
     assert(_S != NULL);
     _Acc::_Next(_S) = _Narg != 0 ? _Narg : _S;
     _Acc::_Prev(_S) = _Parg != 0 ? _Parg : _S;
     return _S;
   }
+
+  iterator erase(iterator _P) {
+    _Nodeptr _S = (_P++)._Mynode();
+    _Acc::_Next(_Acc::_Prev(_S)) = _Acc::_Next(_S);
+    _Acc::_Prev(_Acc::_Next(_S)) = _Acc::_Prev(_S);
+
+    /////////////////////
+//    free(_S);
+    allocator.destroy(&_Acc::_Value(_S)); //destroy object
+    _Freenode(_S);
+    /////////////////////
+    --_Size;
+    return _P;
+  }
+
+  void _Freenode(_Nodeptr _S) {
+    allocator.deallocate(_S, 1);
+    //operatror delete(_S);
+  }
+
  private:
+  _A allocator;
   _Nodeptr _Head;
   size_type _Size;
 
