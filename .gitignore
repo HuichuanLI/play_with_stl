@@ -4,3 +4,7 @@
 my_stl/cmake-build-debug/
 
 my_stl/cmake-build-release/
+
+my_stl/test/cmake-build-debug/
+
+my_stl/test/cmake-build-release/

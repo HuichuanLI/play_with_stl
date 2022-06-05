@@ -141,6 +141,7 @@ class Vector {
     for (; _F != _L; ++_P, ++_F)
       allocator.construct(_P, *_F);
     return _P;
+
   }
   void _Ufill(iterator _F, size_type _N, const _Ty &_X) {
     for (; 0 < _N; --_N, ++_F)
