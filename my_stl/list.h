@@ -29,13 +29,14 @@ class list {
     static _Vref _Value(_Nodeptr _P) { return ((_Vref) (*_P)._Value); }
   };
 
-  typedef std::size_t size_type;
-  typedef _Ty value;
-  typedef _Ty *pointer;
-  typedef _Ty &reference;
-  typedef const _Ty *const_pointer;
-  typedef const _Ty &const_reference;
-  typedef int difference_type;
+  typedef typename _A::size_type size_type;
+  typedef typename _A::difference_type difference_type;
+  typedef typename _A::pointer pointer;
+  typedef typename _A::const_pointer const_pointer;
+  typedef typename _A::reference reference;
+  typedef typename _A::const_reference const_reference;
+  typedef typename _A::value_type value_type;
+
   class const_iterator {
    public:
     const_iterator() {}
@@ -112,7 +113,7 @@ class list {
   list(_It _F, _It _L) : _Head(_Buynode()), _Size(0) { insert(begin(), _F, _L); }
   ~list() {
     erase(begin(), end());
-    _Freenode (_Head);
+    _Freenode(_Head);
     _Head = 0;
     _Size = 0;
   }
