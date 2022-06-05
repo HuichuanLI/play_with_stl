@@ -51,6 +51,13 @@ int main() {
   }
   cout << endl;
 
+  mylist2.reverse();
+  it2 = mylist2.begin();
+  while (it2 != mylist2.end()) {
+    cout << *it2 << " ";
+    ++it2;
+  }
+
 }
 
 //
