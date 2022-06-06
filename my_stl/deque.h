@@ -131,6 +131,29 @@ class deque {
 
   }
   void _Freeptr(_Mapptr _M) { allocator.deallocate(*_M, _DEQUESIZ); }
+
+  void _Freefront() {
+    _Freeptr(_First._Map++);
+    if (empty()) {
+      _First = iterator();
+      _Last = _First;
+      _Freemap();
+    } else
+      _First = iterator(*_First._Map, _First._Map);
+  }
+
+  void _Freeback() {
+    _Freeptr(_Last._Map--);
+    if (empty()) {
+      if (_First._Map == _Last._Map)
+        _Freeptr(_First._Map);
+      _First = iterator();
+      _Last = _First;
+      _Freemap();
+    } else
+      _Last = iterator(*_Last._Map + _DEQUESIZ, _Last._Map);
+  }
+  void _Freemap() { allocator.deallocate(_Map, _Mapsize); }
  private:
   _A allocator;
   iterator _First, _Last;
