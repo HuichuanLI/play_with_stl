@@ -12,6 +12,8 @@
 template<class _Ty, class _A=myallocator<_Ty> >
 class deque {
  public:
+
+  //ÝÍÈ¡
   typedef typename _A::size_type size_type;
   typedef typename _A::difference_type difference_type;
   typedef typename _A::pointer pointer;
@@ -24,6 +26,7 @@ class deque {
 
   typedef pointer *_Mapptr; //int ** _Mapptr;
  public:
+
   class iterator {
     friend class deque<_Ty, _A>;
    public:
@@ -101,34 +104,43 @@ class deque {
     pointer _First, _Last, _Next;
     _Mapptr _Map;
   };
-  typedef iterator _It;
 
-  iterator begin() { return _First; }
-  iterator end() { return _Last; }
+  typedef iterator _It;
+ public:
+  explicit deque(const _A &_A1 = _A())
+      : allocator(_A1), _First(), _Last(), _Map(0), _Mapsize(0), _Size(0) {}
+ public:
   size_type size() const { return _Size; }
   bool empty() const { return size() == 0; }
-
+  reference front() { return (*begin()); }
+  reference back() { return (*(end() - 1)); }
+ public:
+  iterator begin() { return _First; }
+  iterator end() { return _Last; }
+ public:
   void push_front(const _Ty &_X) {
     if (empty() || _First._Next == _First._First)
       _Buyfront();
     allocator.construct(--_First._Next, _X);
     ++_Size;
   }
-
   void push_back(const _Ty &_X) {
-    if (empty() || _Last._Next == _Last._Last) { // 空间不足
-      _Buyback(); //
+    if (empty() || _Last._Next == _Last._Last) //¿Õ¼ä²»×ã
+    {
+      _Buyback(); // ??????
       allocator.construct(_Last._Next++, _X);
-    } else if (_Last._Next + 1 == _Last._Last) // 只有一个空间
+    } else if (_Last._Next + 1 == _Last._Last) // Ö»ÓÐÒ»¸ö¿Õ¼ä
     {
       allocator.construct(_Last._Next++, _X);
       _Buyback();
-    } else //空间充足
+
+    } else //¿Õ¼ä³ä×ã
     {
       allocator.construct(_Last._Next++, _X);
     }
+    ++_Size;
   }
-
+ public:
   void pop_front() {
     allocator.destroy(_First._Next++);
     --_Size;
@@ -143,11 +155,70 @@ class deque {
     --_Size;
     if (empty())
       _Freeback();
-  }
 
-  explicit deque(const _A &_A1 = _A())
-      : allocator(_A1), _First(), _Last(), _Map(0), _Mapsize(0), _Size(0) {}
+  }
+ public:
+  iterator insert(iterator _P, const _Ty &_X = _Ty()) {
+    if (_P == begin()) {
+      push_front(_X);
+      return begin();
+    } else if (_P == end()) {
+      push_back(_X);
+      return end() - 1;
+    } else {
+      iterator _S;
+      size_type _Off = _P - begin();
+      if (_Off < size() / 2) {
+        push_front(front());
+        _S = begin() + _Off;
+        copy(begin() + 2, _S + 1, begin() + 1); // ??????????
+      } else {
+        push_back(back());
+        _S = begin() + _Off;
+        copy_backward(_S, end() - 2, end() - 1);
+      }
+      *_S = _X;
+      return _S;
+    }
+  }
+  void insert(iterator _P, size_type _M, const _Ty &_X);
+  void insert(iterator _P, _It _F, _It _L);
+  iterator erase(iterator _P) { return erase(_P, _P + 1); }
+  iterator erase(iterator _F, iterator _L) {
+    size_type _N = _L - _F;
+    size_type _M = _F - begin();
+    if (_M < end() - _L) {
+      copy_backward(begin(), _F, _L);
+      for (; 0 < _N; --_N)
+        pop_front();
+    } else {
+      copy(_L, end(), _F);
+      for (; 0 < _N; --_N)
+        pop_back();
+    }
+    return _M == 0 ? begin() : begin() + _M;
+  }
  protected:
+  void _Buyback() {
+    pointer _P = allocator.allocate(_DEQUESIZ, (void *) 0);
+    if (empty()) {
+      _Mapsize = _DEQUEMAPSIZ;
+      size_type _N = _Mapsize / 2;
+      _Getmap();
+      _Setptr(_Map + _N, _P);
+      _First = iterator(_P + _DEQUESIZ / 2, _Map + _N);
+      _Last = _First;
+    } else if (_Last._Map < _Map + (_Mapsize - 1)) {
+      _Setptr(++_Last._Map, _P);
+      _Last = iterator(_P, _Last._Map);
+    } else {
+      difference_type _I = _Last._Map - _First._Map + 1; // 1
+      _Mapptr _M = _Growmap(2 * _I);
+      _Setptr(_M + _I, _P);
+      _First = iterator(_First._Next, _M);
+      _Last = iterator(_P, _M + _I);
+    }
+  }
   void _Buyfront() {
     pointer _P = allocator.allocate(_DEQUESIZ, (void *) 0);
     if (empty()) {
@@ -168,49 +239,6 @@ class deque {
       _Last = iterator(_Last._Next, _M + _I);
     }
   }
-  void _Buyback() {
-    pointer _P = allocator.allocate(_DEQUESIZ, (void *) 0);
-    if (empty()) {
-      _Mapsize = _DEQUEMAPSIZ;
-      size_type _N = _Mapsize / 2;
-      _Getmap();
-      _Setptr(_Map + _N, _P);
-      _First = iterator(_P + _DEQUESIZ / 2, _Map + _N);
-      _Last = _First;
-    } else if (_Last._Map < _Map + (_Mapsize - 1)) { // _Map还有空间了
-      _Setptr(++_Last._Map, _P);
-      _Last = iterator(_P, _Last._Map);
-    } else {
-      difference_type _I = _Last._Map - _First._Map + 1; // 1 _Map
-      _Mapptr _M = _Growmap(2 * _I);
-      _Setptr(_M + _I, _P);
-      _First = iterator(_First._Next, _M);
-      _Last = iterator(_P, _M + _I);
-    }
-  }
-  void _Getmap() { _Map = (_Mapptr) allocator._Charalloc(_Mapsize * sizeof(pointer)); }
-  void _Setptr(_Mapptr _M, pointer _P) { *_M = _P; }
-
-  _Mapptr _Growmap(size_type _Newsize) {
-    _Mapptr _M = (_Mapptr) allocator._Charalloc(_Newsize * sizeof(pointer));
-    copy(_First._Map, _Last._Map + 1, _M + _Newsize / 4);
-    allocator.deallocate(_Map, _Mapsize);
-    _Map = _M;
-    _Mapsize = _Newsize;
-    return (_M + _Newsize / 4);
-
-  }
-  void _Freeptr(_Mapptr _M) { allocator.deallocate(*_M, _DEQUESIZ); }
-
-  void _Freefront() {
-    _Freeptr(_First._Map++);
-    if (empty()) {
-      _First = iterator();
-      _Last = _First;
-      _Freemap();
-    } else
-      _First = iterator(*_First._Map, _First._Map);
-  }
 
   void _Freeback() {
     _Freeptr(_Last._Map--);
@@ -222,6 +250,27 @@ class deque {
       _Freemap();
     } else
       _Last = iterator(*_Last._Map + _DEQUESIZ, _Last._Map);
+  }
+  void _Freefront() {
+    _Freeptr(_First._Map++);
+    if (empty()) {
+      _First = iterator();
+      _Last = _First;
+      _Freemap();
+    } else
+      _First = iterator(*_First._Map, _First._Map);
+  }
+
+  void _Getmap() { _Map = (_Mapptr) allocator._Charalloc(_Mapsize * sizeof(pointer)); }
+  void _Setptr(_Mapptr _M, pointer _P) { *_M = _P; }
+  void _Freeptr(_Mapptr _M) { allocator.deallocate(*_M, _DEQUESIZ); }
+  _Mapptr _Growmap(size_type _Newsize) {
+    _Mapptr _M = (_Mapptr) allocator._Charalloc(_Newsize * sizeof(pointer));
+    copy(_First._Map, _Last._Map + 1, _M + _Newsize / 4);
+    allocator.deallocate(_Map, _Mapsize);
+    _Map = _M;
+    _Mapsize = _Newsize;
+    return (_M + _Newsize / 4);
   }
   void _Freemap() { allocator.deallocate(_Map, _Mapsize); }
  private:

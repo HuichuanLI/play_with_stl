@@ -28,9 +28,9 @@ int main() {
 
   deque<int>::iterator it = de.begin();
 
-  //cout<<it[2]<<endl;
-  //it += 5;
-  //cout<<*it<<endl;
+  cout<<it[2]<<endl;
+  it += 5;
+  cout<<*it<<endl;
   while (it != de.end()) {
     cout << *it << " "; //it->
     ++it; //it++  --it it--
