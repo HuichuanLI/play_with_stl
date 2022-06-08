@@ -24,19 +24,89 @@ class deque {
 
   typedef pointer *_Mapptr; //int ** _Mapptr;
  public:
-  size_type size() const { return _Size; }
-  bool empty() const { return size() == 0; }
-
   class iterator {
     friend class deque<_Ty, _A>;
    public:
     iterator() : _First(0), _Last(0), _Next(0), _Map(0) {}
     iterator(pointer _P, _Mapptr _M)
         : _First(*_M), _Last(*_M + _DEQUESIZ), _Next(_P), _Map(_M) {}
+    reference operator*() { return *_Next; }
+    pointer operator->() { return &**this; }
+    iterator &operator++() {
+      if (++_Next == _Last) {
+        _First = *++_Map;
+        _Last = _First + _DEQUESIZ;
+        _Next = _First;
+      }
+      return *this;
+    }
+    iterator operator++(int) {
+      iterator _Tmp = *this;
+      ++*this;
+      return _Tmp;
+    }
+    iterator &operator--() {
+      if (_Next == _First) {
+        _First = *--_Map;
+        _Last = _First + _DEQUESIZ;
+        _Next = _Last;
+      }
+      --_Next;
+      return *this;
+    }
+    iterator operator--(int) {
+      iterator _Tmp = *this;
+      --*this;
+      return _Tmp;
+    }
+    iterator &operator+=(difference_type _N) {
+      _Add(_N);
+      return *this;
+    }
+    iterator &operator-=(difference_type _N) { return *this += -_N; }
+
+    iterator operator+(difference_type _N) {
+      iterator _Tmp = *this;
+      return (_Tmp += _N);
+    }
+    iterator operator-(difference_type _N) {
+      iterator _Tmp = *this;
+      return (_Tmp -= _N);
+    }
+
+    reference operator[](difference_type _N) { return (*(*this + _N)); }
+
+    difference_type operator-(const iterator &_X) const {
+      return (_Map == _X._Map ? _Next - _X._Next
+                              : _DEQUESIZ * (_Map - _X._Map - 1)
+                  + (_Next - _First) + (_X._Last - _X._Next));
+    }
+
+    bool operator==(const iterator &_X) { return _Next == _X._Next; }
+    bool operator!=(const iterator &_X) { return !(*this == _X); }
+   protected:
+    void _Add(difference_type _N) {
+      difference_type _Off = _N + _Next - _First; // 5 + 7 = 12
+      difference_type _Moff = (_Off >= 0) ? _Off / _DEQUESIZ : -((_DEQUESIZ - 1 - _Off) / _DEQUESIZ);
+      if (_Moff == 0)
+        _Next += _N;
+      else {
+        _Map += _Moff;
+        _First = *_Map;
+        _Last = _First + _DEQUESIZ;
+        _Next = _First + (_Off - _Moff * _DEQUESIZ);
+      }
+    }
    protected:
     pointer _First, _Last, _Next;
     _Mapptr _Map;
   };
+  typedef iterator _It;
+
+  iterator begin() { return _First; }
+  iterator end() { return _Last; }
+  size_type size() const { return _Size; }
+  bool empty() const { return size() == 0; }
 
   void push_front(const _Ty &_X) {
     if (empty() || _First._Next == _First._First)
@@ -159,5 +229,5 @@ class deque {
   iterator _First, _Last;
   _Mapptr _Map;
   size_type _Mapsize, _Size;
-}
+};
 #endif //PLAY_WITH_ALGO_MY_STL_DEQUE_H_
