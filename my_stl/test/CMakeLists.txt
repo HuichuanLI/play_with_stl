@@ -3,5 +3,5 @@ project(play_with_algo)
 
 set(CMAKE_CXX_STANDARD 11)
 
-set(SOURCE_FILES test_stack.cpp ../deque.h ../stack.h ../queue.h)
+set(SOURCE_FILES test_string.cpp  ../string.h)
 add_executable(play_with_algo ${SOURCE_FILES})
