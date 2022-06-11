@@ -18,7 +18,6 @@ class mybasic_string {
   typedef const _E &const_reference;
   typedef _E value_type;
 
-
   typedef pointer iterator;
   typedef const_pointer const_iterator;
  public:
@@ -95,16 +94,23 @@ class mybasic_string {
     }
     return (*this);
   }
-//  iterator erase(iterator _P) {
-//    size_t _M = _Pdif(_P, begin());
-//    erase(_M, 1);
-//    return (_Psum(_Ptr, _M));
-//  }
-//  iterator erase(iterator _F, iterator _L) {
-//    size_t _M = _Pdif(_F, begin());
-//    erase(_M, _Pdif(_L, _F));
-//    return (_Psum(_Ptr, _M));
-//  }
+  iterator begin() {
+    return (_Ptr);
+  }
+  iterator end() {
+    return (_Ptr + _Len);
+  }
+
+  iterator erase(iterator _P) {
+    size_t _M = _Pdif(_P, begin());
+    erase(_M, 1);
+    return (_Psum(_Ptr, _M));
+  }
+  iterator erase(iterator _F, iterator _L) {
+    size_t _M = _Pdif(_F, begin());
+    erase(_M, _Pdif(_L, _F));
+    return (_Psum(_Ptr, _M));
+  }
  public:
   size_type max_size() const {
     size_type _N = allocator.max_size();
