@@ -12,8 +12,6 @@
 template<class _Ty, class _A=myallocator<_Ty> >
 class deque {
  public:
-
-  //ÝÍÈ¡
   typedef typename _A::size_type size_type;
   typedef typename _A::difference_type difference_type;
   typedef typename _A::pointer pointer;

@@ -16,6 +16,7 @@ class list {
   struct _Node;
   typedef _Node *_Nodeptr;
   typedef list<_Ty, _A> _Myt;
+  typedef _A allocator_type;
 
   struct _Node {
     _Nodeptr _Next, _Prev;
@@ -108,7 +109,7 @@ class list {
   typedef const_iterator _It;
 
  public:
-  explicit list() : _Head(_Buynode()), _Size(0) {}
+  explicit list(const _A &_A1 = _A()) : allocator(_A1), _Head(_Buynode()), _Size(0) {}
   explicit list(size_type _N, const _Ty &_V = _Ty()) : _Head(_Buynode()), _Size(0) { insert(begin(), _N, _V); }
   list(const _Ty *_F, const _Ty *_L) : _Head(_Buynode()), _Size(0) { insert(begin(), _F, _L); }
   list(_It _F, _It _L) : _Head(_Buynode()), _Size(0) { insert(begin(), _F, _L); }

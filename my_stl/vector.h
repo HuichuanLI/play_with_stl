@@ -17,6 +17,7 @@ class Vector {
   typedef typename _A::const_reference const_reference;
   typedef typename _A::value_type value_type;
   typedef typename _A::allocator_type;
+  typedef _A allocator_type;
 
   //typedef pointer iterator;
   typedef _Ty *iterator;
