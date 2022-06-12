@@ -34,7 +34,31 @@ class bitset {
     }
     return _V;
   }
+  bitset<_N> &flip() {
+    for (int _I = _Nw; 0 <= _I; --_I)
+      _A[_I] = ~_A[_I];
+    _Trim();
+    return *this;
+  }
+  bitset<_N> &flip(size_t _P) {
+    if (_N <= _P)
+      _Xran();
+    _A[_P / _Nb] ^= (_Ty) 1 << _P % _Nb;
+    return *this;
+  }
 
+  bitset<_N> &reset() {
+    _Tidy();
+    return *this;
+  }
+  bitset<_N> reset(size_t _P) {
+    return set(_P, 0);
+  }
+
+  bitset<_N> operator~() const {
+    return bitset<_N>(*this).flip();
+  }
+  
   bitset() {
     _Tidy();
   }
