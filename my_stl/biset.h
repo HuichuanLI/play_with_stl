@@ -11,10 +11,30 @@ template<std::size_t _N>
 class bitset {
  public:
   typedef unsigned long _Ty;
-  //number bit                    number word
-  //32
-  enum { _Nb = CHAR_BIT * sizeof(_Ty), _Nw = _N == 0 ? 0 : (_N - 1) / _Nb };
  public:
+  size_t size() const {
+    return _N;
+  }
+  bool any() const {
+    for (int _I = _Nw; 0 <= _I; --_I) {
+      if (_A[0] != 0)
+        return true;
+    }
+    return false;
+  }
+  bool none() const { return !any(); }
+
+  size_t count() const {
+    size_t _V = 0;
+    for (int _I = _Nw; 0 <= _I; --_I) {
+      for (_Ty _X = _A[_I]; _X != 0; _X >>= 4) {
+        _V += "\0\1\1\2\1\2\2\3"
+              "\1\2\2\3\2\3\3\4"[_X & 0xF];
+      }
+    }
+    return _V;
+  }
+
   bitset() {
     _Tidy();
   }
@@ -40,6 +60,26 @@ class bitset {
       else if (_S[_P] != '0')
         _Xinv();
   }
+  bitset<_N> &set() {
+    _Tidy(~(_Ty) 0);
+    return (*this);
+  }
+  bitset<_N> &set(size_t _P, bool _X = true) {
+    if (_N <= _P)
+      _Xran();
+    if (_X)
+      _A[_P / _Nb] |= (_Ty) 1 << _P % _Nb;   //1
+    else
+      _A[_P / _Nb] &= ~((_Ty) 1 << _P % _Nb); //0
+    return (*this);
+  }
+
+  friend std::ostream &operator<<(std::ostream &_O, const bitset<_N> &_R) {
+    for (size_t _P = _N; 0 < _P;)
+      _O << (_R.test(--_P) ? '1' : '0');
+    return (_O);
+  }
+
  private:
   //number bit                    number word
   //32

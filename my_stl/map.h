@@ -20,24 +20,19 @@ class map {
    public:
     bool operator()(const value_type &_X,
                     const value_type &_Y) const { return (comp(_X.first, _Y.first)); }
-    _PROTECTED:
-        value_compare(_Pr _Pred
-    )
-    :
-    comp(_Pred) {}
     _Pr comp;
   };
   typedef _K key_type;
   typedef _Ty referent_type;
   typedef _Pr key_compare;
   typedef _A allocator_type;
-  typedef _A::reference _Tref;
+  typedef typename _A::reference _Tref;
   typedef _Tree<_K, value_type, _Kfn, _Pr, _A> _Imp;
-  typedef _Imp::size_type size_type;
-  typedef _Imp::difference_type difference_type;
-  typedef _Imp::reference reference;
-  typedef _Imp::const_reference const_reference;
-  typedef _Imp::iterator iterator;
+  typedef typename _Imp::size_type size_type;
+  typedef typename _Imp::difference_type difference_type;
+  typedef typename _Imp::reference reference;
+  typedef typename _Imp::const_reference const_reference;
+  typedef typename _Imp::iterator iterator;
 
   typedef pair<iterator, bool> _Pairib;
   typedef pair<iterator, iterator> _Pairii;
@@ -113,11 +108,6 @@ class multimap {
    public:
     bool operator()(const value_type &_X,
                     const value_type &_Y) const { return (comp(_X.first, _Y.first)); }
-    _PROTECTED:
-        value_compare(_Pr _Pred
-    )
-    :
-    comp(_Pred) {}
     _Pr comp;
   };
   typedef _K key_type;
