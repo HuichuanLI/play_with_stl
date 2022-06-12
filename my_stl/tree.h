@@ -18,11 +18,15 @@ class _Tree {
     _Ty _Value;
     _Redbl _Color;
   };
+  class iterator;
+  friend class iterator;
 
   typedef _Node *&_Nodepref;
   typedef const _K &_Keyref;
   typedef _Redbl &_Rbref;
   typedef _Ty &_Vref;
+  typedef pair<iterator, bool> _Pairib;
+  typedef pair<iterator, iterator> _Pairii;
 
   static _Rbref _Color(_Nodeptr _P) { return ((_Rbref) (*_P)._Color); }
   static _Keyref _Key(_Nodeptr _P) { return (_Kfn()(_Value(_P))); }
@@ -42,7 +46,6 @@ class _Tree {
   typedef _Ty &reference;
   typedef const _Ty &const_reference;
  public:
-  class iterator;
   explicit _Tree(const _Pr &_Parg, bool _Marg = true, const _A &_Al = _A())
       : allocator(_Al), key_compare(_Parg), _Multi(_Marg) {
     _Init();
@@ -146,9 +149,16 @@ class _Tree {
   static _Nodeptr _Nil;  //1
   static size_t _Nilrefs;
 
-  typedef pair<iterator, bool> _Pairib;
-  typedef pair<iterator, iterator> _Pairii;
-
+  static _Nodeptr _Max(_Nodeptr _P) {
+    while (_Right(_P) != _Nil)
+      _P = _Right(_P);
+    return _P;
+  }
+  static _Nodeptr _Min(_Nodeptr _P) {
+    while (_Left(_P) != _Nil)
+      _P = _Left(_P);
+    return _P;
+  }
   void _Init() {
     _Nodeptr _Tmp = _Buynode(0, _Black);
     {
