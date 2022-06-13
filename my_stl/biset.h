@@ -58,7 +58,7 @@ class bitset {
   bitset<_N> operator~() const {
     return bitset<_N>(*this).flip();
   }
-  
+
   bitset() {
     _Tidy();
   }
@@ -102,6 +102,74 @@ class bitset {
     for (size_t _P = _N; 0 < _P;)
       _O << (_R.test(--_P) ? '1' : '0');
     return (_O);
+  }
+
+  _Ty _W(size_t _I) const { return (_A[_I]); }
+
+  bitset<_N> &operator&=(const bitset<_N> &_R) {
+    for (int _I = _Nw; 0 <= _I; --_I)
+      _A[_I] &= _R._W(_I);
+    return *this;
+  }
+
+  bitset<_N> &operator|=(const bitset<_N> &_R) {
+    for (int _I = _Nw; 0 <= _I; --_I)
+      _A[_I] |= _R._W(_I);
+    return *this;
+  }
+  bitset<_N> &operator^=(const bitset<_N> &_R) {
+    for (int _I = _Nw; 0 <= _I; --_I)
+      _A[_I] ^= _R._W(_I);
+    return *this;
+  }
+  bitset<_N> &operator<<=(size_t _P) {
+    if (_P < 0)
+      return *this >>= -_P;
+    const int _D = _P / _Nb;
+    if (_D != 0) {
+      for (int _I = _Nw; 0 <= _I; --_I) {
+        _A[_I] = _D <= _I ? _A[_I - _D] : 0;
+      }
+    }
+    if ((_P % _Nb) != 0) {
+      for (int _I = _Nw; 0 < _I; --_I) {
+        _A[_I] = (_A[_I] << _P) | (_A[_I - 1] >> (_Nb - _P));
+      }
+      _A[0] <<= _P, _Trim();
+    }
+    return *this;
+  }
+  /////////////////////////////////////////////////////////////
+  bitset<_N> &operator>>=(size_t _P) {
+    if (_P < 0)
+      return (*this <<= -_P);
+    const int _D = _P / _Nb;
+    if (_D != 0) {
+      for (int _I = 0; _I <= _Nw; ++_I)
+        _A[_I] = _D <= _Nw - _I ? _A[_I + _D] : 0;
+    }
+    if ((_P %= _Nb) != 0) {
+      for (int _I = 0; _I < _Nw; ++_I)
+        _A[_I] = (_A[_I] >> _P) | (_A[_I + 1] << (_Nb - _P));
+      _A[_Nw] >>= _P;
+    }
+    return (*this);
+  }
+  bitset<_N> operator<<(size_t _R) const  //bt1 = bt << 8
+  {
+    return (bitset<_N>(*this) <<= _R);
+  }
+  bitset<_N> operator>>(size_t _R) const {
+    return (bitset<_N>(*this) >>= _R);
+  }
+  friend bitset<_N> operator&(const bitset<_N> &_L, const bitset<_N> &_R) {
+    return (bitset<_N>(_L) &= _R);
+  }
+  friend bitset<_N> operator|(const bitset<_N> &_L, const bitset<_N> &_R) {
+    return (bitset<_N>(_L) |= _R);
+  }
+  friend bitset<_N> operator^(const bitset<_N> &_L, const bitset<_N> &_R) {
+    return (bitset<_N>(_L) ^= _R);
   }
 
  private:
