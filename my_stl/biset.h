@@ -8,10 +8,53 @@
 #include <string>
 template<std::size_t _N>
 
-class bitset {
+class mybiset {
  public:
   typedef unsigned long _Ty;
+
+  class reference {
+    friend class mybiset<_N>;
+   public:
+    reference &operator=(bool _X) {
+      _Pbs->set(_Off, _X);
+      return *this;
+    }
+    reference &operator=(const reference &_Bs) {
+      _Pbs->set(_Off, bool(_Bs));
+      return *this;
+    }
+    reference &flip() {
+      _Pbs->flip(_Off);
+      return *this;
+    }
+    bool operator~() const { return (!_Pbs->test(_Off)); }
+    operator bool() const {
+      return _Pbs->test(_Off);
+    }
+
+   private:
+    reference(mybiset<_N> &_X, size_t _P) : _Pbs(&_X), _Off(_P) {}
+    mybiset<_N> *_Pbs;
+    size_t _Off;
+  };
+
  public:
+  bool at(size_t _P) const {
+    if (_N <= _P)
+      _Xran();
+    return (test(_P));
+  }
+  reference at(size_t _P) {
+    if (_N <= _P)
+      _Xran();
+    return reference(*this, _P);
+  }
+  bool operator[](size_t _P) const {
+    return (test(_P));
+  }
+  reference operator[](size_t _P) {
+    return reference(*this, _P);
+  }
   size_t size() const {
     return _N;
   }
@@ -34,42 +77,42 @@ class bitset {
     }
     return _V;
   }
-  bitset<_N> &flip() {
+  mybiset<_N> &flip() {
     for (int _I = _Nw; 0 <= _I; --_I)
       _A[_I] = ~_A[_I];
     _Trim();
     return *this;
   }
-  bitset<_N> &flip(size_t _P) {
+  mybiset<_N> &flip(size_t _P) {
     if (_N <= _P)
       _Xran();
     _A[_P / _Nb] ^= (_Ty) 1 << _P % _Nb;
     return *this;
   }
 
-  bitset<_N> &reset() {
+  mybiset<_N> &reset() {
     _Tidy();
     return *this;
   }
-  bitset<_N> reset(size_t _P) {
+  mybiset<_N> reset(size_t _P) {
     return set(_P, 0);
   }
 
-  bitset<_N> operator~() const {
-    return bitset<_N>(*this).flip();
+  mybiset<_N> operator~() const {
+    return mybiset<_N>(*this).flip();
   }
 
-  bitset() {
+  mybiset() {
     _Tidy();
   }
-  bitset(unsigned long _X) {
+  mybiset(unsigned long _X) {
     _Tidy();
     for (size_t _P = 0; _X != 0 && _P < _N; _X >>= 1, ++_P) {
       if (_X & 1)
         set(_P);
     }
   }
-  explicit bitset(const std::string &_S, size_t _P = 0, size_t _L = (size_t) (-1)) {
+  explicit mybiset(const std::string &_S, size_t _P = 0, size_t _L = (size_t) (-1)) {
     size_t _I;
     if (_S.size() < _P)
       _Xran();
@@ -84,11 +127,11 @@ class bitset {
       else if (_S[_P] != '0')
         _Xinv();
   }
-  bitset<_N> &set() {
+  mybiset<_N> &set() {
     _Tidy(~(_Ty) 0);
     return (*this);
   }
-  bitset<_N> &set(size_t _P, bool _X = true) {
+  mybiset<_N> &set(size_t _P, bool _X = true) {
     if (_N <= _P)
       _Xran();
     if (_X)
@@ -98,7 +141,7 @@ class bitset {
     return (*this);
   }
 
-  friend std::ostream &operator<<(std::ostream &_O, const bitset<_N> &_R) {
+  friend std::ostream &operator<<(std::ostream &_O, const mybiset<_N> &_R) {
     for (size_t _P = _N; 0 < _P;)
       _O << (_R.test(--_P) ? '1' : '0');
     return (_O);
@@ -106,23 +149,23 @@ class bitset {
 
   _Ty _W(size_t _I) const { return (_A[_I]); }
 
-  bitset<_N> &operator&=(const bitset<_N> &_R) {
+  mybiset<_N> &operator&=(const mybiset<_N> &_R) {
     for (int _I = _Nw; 0 <= _I; --_I)
       _A[_I] &= _R._W(_I);
     return *this;
   }
 
-  bitset<_N> &operator|=(const bitset<_N> &_R) {
+  mybiset<_N> &operator|=(const mybiset<_N> &_R) {
     for (int _I = _Nw; 0 <= _I; --_I)
       _A[_I] |= _R._W(_I);
     return *this;
   }
-  bitset<_N> &operator^=(const bitset<_N> &_R) {
+  mybiset<_N> &operator^=(const mybiset<_N> &_R) {
     for (int _I = _Nw; 0 <= _I; --_I)
       _A[_I] ^= _R._W(_I);
     return *this;
   }
-  bitset<_N> &operator<<=(size_t _P) {
+  mybiset<_N> &operator<<=(size_t _P) {
     if (_P < 0)
       return *this >>= -_P;
     const int _D = _P / _Nb;
@@ -139,8 +182,13 @@ class bitset {
     }
     return *this;
   }
+  bool test(size_t _P) const {
+    if (_N <= _P)
+      _Xran();
+    return ((_A[_P / _Nb] & ((_Ty) 1 << _P % _Nb)) != 0);
+  }
   /////////////////////////////////////////////////////////////
-  bitset<_N> &operator>>=(size_t _P) {
+  mybiset<_N> &operator>>=(size_t _P) {
     if (_P < 0)
       return (*this <<= -_P);
     const int _D = _P / _Nb;
@@ -155,21 +203,21 @@ class bitset {
     }
     return (*this);
   }
-  bitset<_N> operator<<(size_t _R) const  //bt1 = bt << 8
+  mybiset<_N> operator<<(size_t _R) const  //bt1 = bt << 8
   {
-    return (bitset<_N>(*this) <<= _R);
+    return (mybiset<_N>(*this) <<= _R);
   }
-  bitset<_N> operator>>(size_t _R) const {
-    return (bitset<_N>(*this) >>= _R);
+  mybiset<_N> operator>>(size_t _R) const {
+    return (mybiset<_N>(*this) >>= _R);
   }
-  friend bitset<_N> operator&(const bitset<_N> &_L, const bitset<_N> &_R) {
-    return (bitset<_N>(_L) &= _R);
+  friend mybiset<_N> operator&(const mybiset<_N> &_L, const mybiset<_N> &_R) {
+    return (mybiset<_N>(_L) &= _R);
   }
-  friend bitset<_N> operator|(const bitset<_N> &_L, const bitset<_N> &_R) {
-    return (bitset<_N>(_L) |= _R);
+  friend mybiset<_N> operator|(const mybiset<_N> &_L, const mybiset<_N> &_R) {
+    return (mybiset<_N>(_L) |= _R);
   }
-  friend bitset<_N> operator^(const bitset<_N> &_L, const bitset<_N> &_R) {
-    return (bitset<_N>(_L) ^= _R);
+  friend mybiset<_N> operator^(const mybiset<_N> &_L, const mybiset<_N> &_R) {
+    return (mybiset<_N>(_L) ^= _R);
   }
 
  private:
@@ -187,15 +235,15 @@ class bitset {
       _A[_Nw] &= ((_Ty) 1 << _N % _Nb) - 1;
   }
   void _Xinv() const {
-    throw ("invalid bitset<N> char");
+    throw ("invalid mybiset<N> char");
   }
   void _Xoflo() const {
-    throw ("bitset<N> conversion overflow");
+    throw ("mybiset<N> conversion overflow");
   }
 
   void _Xran() const {
-    throw ("invalid bitset<N> position");
+    throw ("invalid mybiset<N> position");
   }
   _Ty _A[_Nw + 1]; //_Ty _A[4]
-}
+};
 #endif //PLAY_WITH_ALGO_MY_STL_BISET_H_
