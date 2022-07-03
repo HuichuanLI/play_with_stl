@@ -3,5 +3,5 @@ project(play_with_algo)
 
 set(CMAKE_CXX_STANDARD 11)
 
-set(SOURCE_FILES vector.h test/test_vector.cpp)
+set(SOURCE_FILES vector.h test/test_vector.cpp test/list_test.cpp)
 add_executable(play_with_algo ${SOURCE_FILES})
