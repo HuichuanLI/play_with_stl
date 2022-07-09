@@ -7,60 +7,62 @@
 #include<list>
 
 using namespace std;
-//
-//int Comp(const void *e1, const void *e2) {
-//    return (*(int *) e2) - (*(int *) e1);
-//}
-//
-//int Comp1(const void *e1, const void *e2) {
-//    return strcmp((char *) e1, (char *) e2);
-//}
-//
-//void main() {
-//    int ar[] = {32, 453, 2, 3, 5, 65, 57, 67, 34, 431, 41};
-//    int n = sizeof(ar) / sizeof(int);
-//
-//    char *br[] = {"abc", "xyz", "jflal", "nfajod", "faljd"};
-//    int m = sizeof(br) / sizeof(char *);
-//
-//    qsort(ar, n, sizeof(int), Comp);
-//    qsort(br, m, sizeof(char *), Comp1);
-//}
 
+int Comp(const void *e1, const void *e2) {
+    return (*(int *) e2) - (*(int *) e1);
+}
+
+int Comp1(const void *e1, const void *e2) {
+    return strcmp((char *) e1, (char *) e2);
+}
 
 int main() {
-    int ar[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-    int br[10];
-    int cr[10];
+    int ar[] = {32, 453, 2, 3, 5, 65, 57, 67, 34, 431, 41};
+    int n = sizeof(ar) / sizeof(int);
 
-    copy(ar, ar + 10, br);
-    copy_backward(ar, ar + 10, cr + 10);
+    char *br[] = {"abc", "xyz", "jflal", "nfajod", "faljd"};
+    int m = sizeof(br) / sizeof(char *);
 
-    int dr[] = {1, 2, 3, 2, 3, 3, 3, 3, 3, 4, 5, 6, 7, 8, 9, 4, 5, 5, 5, 6};
-    int n = sizeof(dr) / sizeof(int);
-    replace(dr, dr + n, 3, 100);
-    for (auto elem: dr) {
-        cout << elem << endl;
-    }
-
-    int er[10];
-    //fill(er, er+10, 2);
-    fill_n(er, 4, 3);
-
-    remove(dr, dr + n, 3);
-
-    reverse(ar, ar + 10);
-
-    int fr[] = {32, 453, 2, 3, 5, 65, 57, 67, 34, 431, 41};
-    n = sizeof(fr) / sizeof(int);
-    sort(fr, fr + n);
-    for (auto elem: fr) {
-        cout << elem << endl;
-    }
-    sort(fr, fr + n, greater<int>());
-
+    qsort(ar, n, sizeof(int), Comp);
+    qsort(br, m, sizeof(char *), Comp1);
     return 0;
 }
+
+
+//int main() {
+//    int ar[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+//    int br[10];
+//    int cr[10];
+//
+//    copy(ar, ar + 10, br);
+//    copy_backward(ar, ar + 10, cr + 10);
+//
+//    int dr[] = {1, 2, 3, 2, 3, 3, 3, 3, 3, 4, 5, 6, 7, 8, 9, 4, 5, 5, 5, 6};
+//    int n = sizeof(dr) / sizeof(int);
+//    replace(dr, dr + n, 3, 100);
+//    for (auto elem: dr) {
+//        cout << elem << endl;
+//    }
+//
+//    int er[10];
+//    //fill(er, er+10, 2);
+//    fill_n(er, 4, 3);
+//
+//    remove(dr, dr + n, 3);
+//
+//    reverse(ar, ar + 10);
+//
+//    int fr[] = {32, 453, 2, 3, 5, 65, 57, 67, 34, 431, 41};
+//    n = sizeof(fr) / sizeof(int);
+//    sort(fr, fr + n);
+//    for (auto elem: fr) {
+//        cout << elem << endl;
+//    }
+//    sort(fr, fr + n, greater<int>());
+////    qsort(fr, n, sizeof(int), greater<int>());
+//
+//    return 0;
+//}
 
 
 /*
