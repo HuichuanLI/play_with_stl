@@ -4,6 +4,7 @@
 #include<bitset>
 #include<string>
 #include <iostream>
+#include <vector>
 
 using namespace std;
 
@@ -24,6 +25,27 @@ private:
     bitset<N> bt; //1010101010101101010101010
 };
 
+class Student {
+public:
+    Student(string name) : m_strName(name) {}
+
+public:
+    void AddAttendInfo(Attend<31> &ad) {
+        v.push_back(ad);
+    }
+
+    void ShowAttendInfo() const {
+        cout << "姓名:" << m_strName << endl;
+        cout << "月份" << "\t" << "出勤天数" << endl;
+        for (int i = 0; i < v.size(); ++i) {
+            cout << v[i].GetMonth() << "\t" << v[i].GetAttendDays() << endl;
+        }
+    }
+
+private:
+    string m_strName;
+    vector<Attend<31> > v;
+};
 
 int main() {
 
@@ -41,5 +63,7 @@ int main() {
     s.AddAttendInfo(ad3);
 
     s.ShowAttendInfo();
+
+    return 0;
 
 }
