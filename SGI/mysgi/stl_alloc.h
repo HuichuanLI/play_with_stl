@@ -272,3 +272,36 @@ void *__default_alloc_template<threads, inst>::reallocate(void *p, size_t old_sz
     deallocate(p, old_sz);
     return (result);
 }
+
+// 分装空间配置器
+
+#ifdef __USE_MALLOC
+typedef malloc_alloc alloc;
+#else
+typedef __default_alloc_template<0, 0> alloc;
+#endif
+
+template<class T, class Alloc>
+class simple_alloc {
+public:
+    static T *allocate(size_t n) //申请空间
+    {
+        return 0 == n ? 0 : (T *) Alloc::allocate(n * sizeof(T));
+    }
+
+    static T *allocate() //单个空间
+    {
+        return (T *) Alloc::allocate(sizeof(T));
+    }
+
+    static void deallocate(T *p, size_t n) //释放空间
+    {
+        if (0 != n)
+            Alloc::deallocate(p, n * sizeof(T));
+    }
+
+    static void deallocate(T *p) //释放单个空间
+    {
+        Alloc::deallocate(p, sizeof(T));
+    }
+};
