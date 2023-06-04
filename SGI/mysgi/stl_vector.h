@@ -7,6 +7,8 @@
 #pragma once
 
 #include"stl_alloc.h"
+#include "stl_uninitialized.h"
+
 
 template<class T, class Alloc=alloc>
 class vector {
@@ -34,6 +36,7 @@ private:
 
     iterator allocate_and_fill(size_type n, const T &x) {
         iterator result = data_allocator::allocate(n);
+        bss::uninitialized_fill_n(result, n, x);
         return result;
     }
 
@@ -41,8 +44,8 @@ private:
     iterator start;
     iterator finish;
     iterator end_of_storage;
-    typedef simple_alloc <value_type, Alloc> data_allocator;
+    typedef simple_alloc<value_type, Alloc> data_allocator;
 
-}
+};
 
 #endif //PLAY_WITH_ALGO_STL_VECTOR_H

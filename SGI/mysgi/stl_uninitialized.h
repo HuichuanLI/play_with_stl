@@ -66,7 +66,7 @@ namespace bss {
 
     template<class ForwardIterator, class Size, class T>
     ForwardIterator uninitialized_fill_n(ForwardIterator first, Size n, const T &x) {
-        return __uninitialized_fill_n(first, n, x, value_type(first)); //��ȡ����
+        return __uninitialized_fill_n(first, n, x, value_type(first));
     }
 }
 #endif //PLAY_WITH_ALGO_STL_UNINITIALIZED_H
