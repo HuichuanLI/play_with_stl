@@ -1,26 +1,18 @@
-//
-// Created by lhc456 on 2023/5/27.
-//
 #pragma once
 
-#include "stddef.h"
-#include "stdlib.h"
+//使命：尽可能的分配成功
 
+//#define __USE_MALLOC
+
+//一级空间配置器
 template<int inst>
 class __malloc_alloc_template {
 public:
     static void *allocate(size_t n) {
         void *result = malloc(n);
         if (0 == result)
-            return oom_malloc(n);  //out of memory的情况
+            return oom_malloc(n);  //out of memory 补救
         return result;
-    }
-
-    static void (*set_malloc_handler(void(*f)()))()  //函数指针
-    {
-        void (*old)() = __malloc_alloc_oom_handler;
-        __malloc_alloc_oom_handler = f;
-        return old;
     }
 
     static void deallocate(void *p, size_t n) {
@@ -30,8 +22,16 @@ public:
     static void *reallocate(void *p, size_t old_sz, size_t new_sz) {
         void *result = realloc(p, new_sz);
         if (0 == result)
-            return oom_realloc(p, new_sz);  //out of memory ²¹¾È
+            return oom_realloc(n);  //out of memory 补救
         return result;
+    }
+
+public:
+    static void (*set_malloc_handler(void(*f)()))()  //函数
+    {
+        void (*old)() = __malloc_alloc_oom_handler;
+        __malloc_alloc_oom_handler = f;
+        return old;
     }
 
 private:
@@ -40,15 +40,13 @@ private:
     static void *oom_realloc(void *p, size_t new_sz);
 
     static void (*__malloc_alloc_oom_handler)(); //函数指针
-
 };
 
 template<int inst>
 void (*__malloc_alloc_template<inst>::__malloc_alloc_oom_handler)() = 0;
 
-
 template<int inst>
-void *__malloc_alloc_template<inst>::oom_malloc(size_t n)  //newµÄÊµÏÖ
+void *__malloc_alloc_template<inst>::oom_malloc(size_t n)  //new的实现
 {
     void *result;
     void (*my_malloc_handler)();
@@ -56,14 +54,13 @@ void *__malloc_alloc_template<inst>::oom_malloc(size_t n)  //newµÄÊµÏÖ
     for (;;) {
         my_malloc_handler = __malloc_alloc_oom_handler;
         if (my_malloc_handler == 0)
-            throw std::bad_alloc(); //异常
+            throw bad_alloc(); //抛出异常
         (*my_malloc_handler)();  //my_malloc_handler();
         result = malloc(n);
         if (result)
             return result;
     }
 }
-
 
 template<int inst>
 void *__malloc_alloc_template<inst>::oom_realloc(void *p, size_t new_sz) {
@@ -73,7 +70,7 @@ void *__malloc_alloc_template<inst>::oom_realloc(void *p, size_t new_sz) {
     for (;;) {
         my_malloc_handler = __malloc_alloc_oom_handler;
         if (my_malloc_handler == 0)
-            throw std::bad_alloc(); //Å×³öÒì³£
+            throw bad_alloc(); //抛出异常
         (*my_malloc_handler)();  //my_malloc_handler();
         result = realloc(p, new_sz);
         if (result)
@@ -81,6 +78,10 @@ void *__malloc_alloc_template<inst>::oom_realloc(void *p, size_t new_sz) {
     }
 }
 
+typedef __malloc_alloc_template<0> malloc_alloc;
+
+/////////////////////////////////////////////////////////////////////////////////
+//二级空间配置器
 
 enum {
     __ALIGN = 8
@@ -91,10 +92,6 @@ enum {
 enum {
     __NFREELISTS = __MAX_BYTES / __ALIGN
 };
-
-
-typedef __malloc_alloc_template<0> malloc_alloc;
-
 
 template<bool threads, int inst>
 class __default_alloc_template {
@@ -122,7 +119,7 @@ private:
 private:
     static void *refill(size_t n);
 
-    static char *chunk_alloc(size_t size, int &objs);  //objsÊÇÒýÓÃ´«µÝ
+    static char *chunk_alloc(size_t size, int &objs);  //objs是引用传递
 private:
     static obj *free_list[__NFREELISTS];
 private:
@@ -163,9 +160,9 @@ void *__default_alloc_template<threads, inst>::allocate(size_t n) {
 }
 
 template<bool threads, int inst>
-void *__default_alloc_template<threads, inst>::refill(size_t n) //¿é
+void *__default_alloc_template<threads, inst>::refill(size_t n) //块
 {
-    int nobjs = 20;// 20个块
+    int nobjs = 20;//经验值
     char *chunk = chunk_alloc(n, nobjs);
 
     if (nobjs == 1)
@@ -191,7 +188,6 @@ void *__default_alloc_template<threads, inst>::refill(size_t n) //¿é
     return result;
 }
 
-
 template<bool threads, int inst>
 char *__default_alloc_template<threads, inst>::chunk_alloc(size_t size, int &nobjs) {
     char *result;
@@ -210,11 +206,13 @@ char *__default_alloc_template<threads, inst>::chunk_alloc(size_t size, int &nob
         return result;
     } else {
         size_t bytes_to_get = 2 * total_bytes + ROUND_UP(heap_size >> 4);
+
         if (bytes_left > 0) {
             obj **my_free_list = free_list + FREELIST_INDEX(bytes_left);
             ((obj *) start_free)->free_list_link = *my_free_list;
             *my_free_list = (obj *) start_free;
         }
+
         start_free = (char *) malloc(bytes_to_get);
         if (start_free == 0) {
             obj **my_free_list;
@@ -230,14 +228,18 @@ char *__default_alloc_template<threads, inst>::chunk_alloc(size_t size, int &nob
                 }
             }
             end_free = 0;
-            // 再去调用一级空间配置
             start_free = (char *) malloc_alloc::allocate(bytes_to_get);
         }
+
         heap_size += bytes_to_get;
         end_free = start_free + bytes_to_get;
-        return chunk_alloc(size, nobjs); // 递归调用
+
+        return chunk_alloc(size, nobjs); //递归调动
     }
+
+    return result;
 }
+
 
 template<bool threads, int inst>
 void __default_alloc_template<threads, inst>::deallocate(void *p, size_t n) {
@@ -263,7 +265,7 @@ void *__default_alloc_template<threads, inst>::reallocate(void *p, size_t old_sz
     if (ROUND_UP(old_sz) == ROUND_UP(new_sz))
         return (p);
 
-    // 申请空间
+    //申请空间
     result = allocate(new_sz);
     copy_sz = new_sz > old_sz ? old_sz : new_sz;
     memcpy(result, p, copy_sz);
@@ -273,8 +275,9 @@ void *__default_alloc_template<threads, inst>::reallocate(void *p, size_t old_sz
     return (result);
 }
 
-// 分装空间配置器
 
+////////////////////////////////////////////////////////////////////////////
+//分装空间配置器
 #ifdef __USE_MALLOC
 typedef malloc_alloc alloc;
 #else
@@ -284,23 +287,23 @@ typedef __default_alloc_template<0, 0> alloc;
 template<class T, class Alloc>
 class simple_alloc {
 public:
-    static T *allocate(size_t n) //申请空间
+    static T *allocate(size_t n) //数组空间
     {
         return 0 == n ? 0 : (T *) Alloc::allocate(n * sizeof(T));
     }
 
-    static T *allocate() //单个空间
+    static T *allocate() //单个数据空间
     {
         return (T *) Alloc::allocate(sizeof(T));
     }
 
-    static void deallocate(T *p, size_t n) //释放空间
+    static void deallocate(T *p, size_t n) //释放数组空间
     {
         if (0 != n)
             Alloc::deallocate(p, n * sizeof(T));
     }
 
-    static void deallocate(T *p) //释放单个空间
+    static void deallocate(T *p) //释放单个数据空间
     {
         Alloc::deallocate(p, sizeof(T));
     }

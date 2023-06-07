@@ -87,16 +87,98 @@ void Out_Of_Memory() {
 //}
 
 
-class Test {
+//class Test {
+//public:
+//    Test(int d = 0) : m_data(d) {}
+//
+//private:
+//    int m_data;
+//};
+//
+//
+//int main() {
+//    vector<Test> iv(5);// 0 0 0 0 0
+//    return 0;
+//}
+
+#define N 10
+
+class CIntArray {
 public:
-    Test(int d = 0) : m_data(d) {}
+    CIntArray() {
+        for (int i = 0; i < N; ++i)
+            ar[i] = i + 1; //1 2 3 4 5 6 7 8 9 10
+    }
+
+    int GetSum(int times) {
+        int sum = 0;
+        for (int i = 0; i < N; ++i)
+            sum += ar[i];
+        return sum * times;
+    }
 
 private:
-    int m_data;
+    int ar[N];
 };
 
+class CFloatArray {
+public:
+    CFloatArray() {
+        for (int i = 0; i < N; ++i)
+            ar[i] = i + 1.11;
+    }
+
+    float GetSum(float times) {
+        float sum = 0;
+        for (int i = 0; i < N; ++i)
+            sum += ar[i];
+        return sum * times;
+    }
+
+private:
+    float ar[N];
+};
+
+template<class T>
+struct type_traits {
+};
+
+template<>
+struct type_traits<CIntArray> {
+    typedef int return_type;
+    typedef int arg_type;
+};
+
+template<>
+struct type_traits<CFloatArray> {
+    typedef float return_type;
+    typedef float arg_type;
+};
+
+template<class T>
+class CApply {
+public:
+    typename type_traits<T>::return_type GetSum(T &obj, typename type_traits<T>::arg_type times)  //?????¡ì¡À?
+    {
+        //cout << typeid(type_traits<T>::arg_type).name()<<endl;
+        //cout << typeid(type_traits<T>::return_type).name() << endl;
+
+        return obj.GetSum(times);
+    }
+};
 
 int main() {
-    vector<Test> iv(5);// 0 0 0 0 0
+    CIntArray cint;
+    CFloatArray cfloat;
+
+    //cout<<cint.GetSum(2)<<endl;
+    //cout<<cfloat.GetSum(2.2)<<endl;
+
+    CApply<CIntArray> c1;
+    CApply<CFloatArray> c2;
+
+    std::cout << c1.GetSum(cint, 2) << std::endl;
+    std::cout << c2.GetSum(cfloat, 2.2) << std::endl;
+
     return 0;
 }
