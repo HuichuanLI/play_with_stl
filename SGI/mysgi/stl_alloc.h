@@ -1,7 +1,8 @@
 #pragma once
 
 //使命：尽可能的分配成功
-
+#include "stddef.h"
+#include "stdlib.h"
 //#define __USE_MALLOC
 
 //一级空间配置器
@@ -22,7 +23,7 @@ public:
     static void *reallocate(void *p, size_t old_sz, size_t new_sz) {
         void *result = realloc(p, new_sz);
         if (0 == result)
-            return oom_realloc(n);  //out of memory 补救
+            return oom_realloc(p, new_sz);  //out of memory 补救
         return result;
     }
 
@@ -54,7 +55,7 @@ void *__malloc_alloc_template<inst>::oom_malloc(size_t n)  //new的实现
     for (;;) {
         my_malloc_handler = __malloc_alloc_oom_handler;
         if (my_malloc_handler == 0)
-            throw bad_alloc(); //抛出异常
+            throw std::bad_alloc(); //抛出异常
         (*my_malloc_handler)();  //my_malloc_handler();
         result = malloc(n);
         if (result)
@@ -70,7 +71,7 @@ void *__malloc_alloc_template<inst>::oom_realloc(void *p, size_t new_sz) {
     for (;;) {
         my_malloc_handler = __malloc_alloc_oom_handler;
         if (my_malloc_handler == 0)
-            throw bad_alloc(); //抛出异常
+            throw std::bad_alloc(); //抛出异常
         (*my_malloc_handler)();  //my_malloc_handler();
         result = realloc(p, new_sz);
         if (result)

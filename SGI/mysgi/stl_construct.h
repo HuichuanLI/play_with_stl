@@ -1,9 +1,4 @@
-//
-// Created by lhc456 on 2023/6/4.
-//
-
-#ifndef PLAY_WITH_ALGO_STL_CONSTRUCT_H
-#define PLAY_WITH_ALGO_STL_CONSTRUCT_H
+#pragma once
 
 #include"stl_iterator.h"
 
@@ -25,12 +20,6 @@ void __destroy_aux(ForwardIterator first, ForwardIterator last, __false_type) {
         destroy(&*first);
 }
 
-
-template<class ForwardIterator>
-void destroy(ForwardIterator first, ForwardIterator last) {
-    __destroy(first, last, bss::value_type(first));
-}
-
 template<class ForwardIterator>
 void __destroy_aux(ForwardIterator, ForwardIterator, __true_type) {}
 
@@ -40,5 +29,7 @@ void __destroy(ForwardIterator first, ForwardIterator last, T *) {
     __destroy_aux(first, last, trivial_destructor());
 }
 
-
-#endif //PLAY_WITH_ALGO_STL_CONSTRUCT_H
+template<class ForwardIterator>
+void destroy(ForwardIterator first, ForwardIterator last) {
+    __destroy(first, last, bss::value_type(first));
+}

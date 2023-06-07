@@ -167,18 +167,45 @@ public:
     }
 };
 
+//int main() {
+//    CIntArray cint;
+//    CFloatArray cfloat;
+//
+//    //cout<<cint.GetSum(2)<<endl;
+//    //cout<<cfloat.GetSum(2.2)<<endl;
+//
+//    CApply<CIntArray> c1;
+//    CApply<CFloatArray> c2;
+//
+//    std::cout << c1.GetSum(cint, 2) << std::endl;
+//    std::cout << c2.GetSum(cfloat, 2.2) << std::endl;
+//
+//    return 0;
+//}
+
+
 int main() {
-    CIntArray cint;
-    CFloatArray cfloat;
+    vector<int> iv(5);
+    iv.insert(iv.end(), 2, 10);
 
-    //cout<<cint.GetSum(2)<<endl;
-    //cout<<cfloat.GetSum(2.2)<<endl;
+    for (int i = 0; i < iv.size(); ++i)
+        std::cout << iv[i] << " ";
+//    cout << endl;
 
-    CApply<CIntArray> c1;
-    CApply<CFloatArray> c2;
+    iv.pop_back();
+//    for (int i = 0; i < iv.size(); ++i)
+//        std::cout << iv[i] << " ";
+//    cout << endl;
 
-    std::cout << c1.GetSum(cint, 2) << std::endl;
-    std::cout << c2.GetSum(cfloat, 2.2) << std::endl;
+//    iv.resize(5, 0); // 1 2 0 0 0
+//    for (int i = 0; i < iv.size(); ++i)
+//        cout << iv[i] << " ";
+//    cout << endl;
+//
+//    std::cout << "capacity = " << iv.capacity() << std::endl;
+//
+//    iv.reserve(30);
 
+    std::cout << "capacity = " << iv.capacity() << std::endl;
     return 0;
 }

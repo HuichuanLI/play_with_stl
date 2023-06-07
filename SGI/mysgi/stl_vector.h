@@ -96,8 +96,7 @@ public:
         if (finish != end_of_storage) {
             construct(finish, x);
             ++finish;
-        } else
-            insert_aux(end(), x);
+        }
     }
 
     void pop_back() {
@@ -105,7 +104,7 @@ public:
         destroy(finish);
     }
 
-    void insert_aux(iterator position, const T &x);
+//    void insert_aux(iterator position, const T &x);
 
     void insert(iterator position, size_type n, const T &x);
 
@@ -185,7 +184,7 @@ private:
 };
 
 
-template<class T, class Alloc = alloc>
+template<class T, class Alloc>
 void vector<T, Alloc>::insert(iterator position, size_type n, const T &x) {
     if (n != 0) {
         if ((size_type) (end_of_storage - finish) >= n) {
@@ -196,9 +195,9 @@ void vector<T, Alloc>::insert(iterator position, size_type n, const T &x) {
             iterator new_start = data_allocator::allocate(len);
             iterator new_finish = new_start;
 
-            new_finish = uninitialized_copy(start, position, new_start);
-            new_finish = uninitialized_fill_n(new_finish, n, x);
-            new_finish = uninitialized_copy(position, finish, new_finish);
+            new_finish = bss::uninitialized_copy(start, position, new_start);
+            new_finish = bss::uninitialized_fill_n(new_finish, n, x);
+            new_finish = bss::uninitialized_copy(position, finish, new_finish);
 
             destroy(start, finish);
             deallocate();
