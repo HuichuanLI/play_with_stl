@@ -96,6 +96,8 @@ public:
         if (finish != end_of_storage) {
             construct(finish, x);
             ++finish;
+        } else {
+            insert_aux(end(), x);
         }
     }
 
@@ -104,7 +106,7 @@ public:
         destroy(finish);
     }
 
-//    void insert_aux(iterator position, const T &x);
+    void insert_aux(iterator position, const T &x);
 
     void insert(iterator position, size_type n, const T &x);
 
@@ -188,6 +190,25 @@ template<class T, class Alloc>
 void vector<T, Alloc>::insert(iterator position, size_type n, const T &x) {
     if (n != 0) {
         if ((size_type) (end_of_storage - finish) >= n) {
+            T x_copy = x;
+            const size_type elems_after = finish - position;
+            iterator old_finish = finish;
+            if (elems_after > n) {
+                // 插入的空间>n
+                bss::uninitialized_copy(finish - n, finish, finish);
+                finish += n;
+                bss::copy_backward(position, old_finish - n, old_finish);
+                bss::fill(position, position + n, x_copy);
+
+            } else {
+                bss::uninitialized_fill_n(finish, n - elems_after, x_copy);
+                finish += n - elems_after;
+                bss::uninitialized_copy(position, old_finish, finish);
+                finish += elems_after;
+                bss::fill(position, old_finish, x_copy);
+
+            }
+
 
         } else {
             const size_type old_size = size();
@@ -205,6 +226,33 @@ void vector<T, Alloc>::insert(iterator position, size_type n, const T &x) {
             finish = new_finish;
             end_of_storage = new_start + len;
         }
+    }
+}
+
+template<class T, class Alloc>
+void vector<T, Alloc>::insert_aux(iterator position, const T &x) {
+    if (finish != end_of_storage) {
+        construct(finish, *(finish - 1));
+        ++finish;
+        T x_copy = x;
+        copy_backward(position, finish - 2, finish - 1);
+        *position = x_copy;
+    } else {
+        const size_type old_size = size();
+        const size_type len = old_size != 0 ? 2 * old_size : 1;
+        iterator new_start = data_allocator::allocate(len);
+        iterator new_finish = new_start;
+
+        new_finish = uninitialized_copy(start, position, new_start);
+        construct(new_finish, x);
+        ++new_finish;
+        new_finish = uninitialized_copy(position, finish, new_finish);
+
+        destroy(begin(), end());
+        deallocate();
+        start = new_start;
+        finish = new_finish;
+        end_of_storage = new_start + len;
     }
 }
 

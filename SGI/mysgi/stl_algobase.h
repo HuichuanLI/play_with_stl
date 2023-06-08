@@ -11,6 +11,12 @@ namespace bss {
         return a < b ? b : a;
     }
 
+    template<class ForwardIterator, class T>
+    void fill(ForwardIterator first, ForwardIterator last, const T &value) {
+        for (; first != last; ++first)
+            *first = value;
+    }
+
 
     template<class OutputIterator, class Size, class T>
     OutputIterator fill_n(OutputIterator first, Size n, const T &value) {
@@ -46,6 +52,30 @@ namespace bss {
         return __copy_dispatch<InputIterator, OutputIterator>()(first, last, result);
     }
 
+    template<class BidirectionalIterator1, class BidirectionalIterator2>
+    BidirectionalIterator2 __copy_backward(BidirectionalIterator1 first,
+                                           BidirectionalIterator1 last,
+                                           BidirectionalIterator2 result) {
+        while (first != last) *--result = *--last;
+        return result;
+    }
+
+    template<class BidirectionalIterator1, class BidirectionalIterator2>
+    struct __copy_backward_dispatch {
+        BidirectionalIterator2 operator()(BidirectionalIterator1 first,
+                                          BidirectionalIterator1 last,
+                                          BidirectionalIterator2 result) {
+            return __copy_backward(first, last, result);
+        }
+    };
+
+    template<class BidirectionalIterator1, class BidirectionalIterator2>
+    BidirectionalIterator2 copy_backward(BidirectionalIterator1 first,
+                                         BidirectionalIterator1 last,
+                                         BidirectionalIterator2 result) {
+        return __copy_backward_dispatch<BidirectionalIterator1,
+                BidirectionalIterator2>()(first, last, result);
+    }
 
 }
 #endif //PLAY_WITH_ALGO_STL_ALGOBASE_H
