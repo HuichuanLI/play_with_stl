@@ -1,9 +1,4 @@
-//
-// Created by lhc456 on 2023/6/4.
-//
-
-#ifndef PLAY_WITH_ALGO_STL_ITERATOR_H
-#define PLAY_WITH_ALGO_STL_ITERATOR_H
+#pragma once
 
 
 namespace bss {
@@ -19,11 +14,6 @@ namespace bss {
     };
 
     template<class T>
-    random_access_iterator_tag iterator_category(const T *) {
-        return random_access_iterator_tag();
-    }
-
-    template<class T>
     T *value_type(const T *) {
         return (T *) (0);
     }
@@ -31,6 +21,22 @@ namespace bss {
     template<class T>
     ptrdiff_t *distance_type(const T *) {
         return (ptrdiff_t *) (0);
+    }
+
+
+    template<class T>
+    random_access_iterator_tag iterator_category(const T *) {
+        return random_access_iterator_tag();
+    }
+
+
+    //distance
+    template<class InputIterator, class Distance>
+    void __distance(InputIterator first, InputIterator last, Distance &n, input_iterator_tag) {
+        while (first != last) {
+            ++first;
+            ++n;
+        }
     }
 
     template<class RandomAccessIterator, class Distance>
@@ -42,6 +48,4 @@ namespace bss {
     void distance(InputIterator first, InputIterator last, Distance &n) {
         __distance(first, last, n, iterator_category(first));
     }
-
 }
-#endif //PLAY_WITH_ALGO_STL_ITERATOR_H

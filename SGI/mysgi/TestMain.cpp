@@ -2,6 +2,7 @@
 #include <list>
 #include "stl_alloc.h"
 #include "stl_vector.h"
+#include "stl_list.h"
 
 //using namespace std;
 //
@@ -185,14 +186,16 @@ public:
 
 
 int main() {
-    vector<int> iv(5);
-    iv.insert(iv.end(), 2, 10);
+    list<int> mylist;
 
-    for (int i = 0; i < iv.size(); ++i)
-        std::cout << iv[i] << " ";
+//    vector<int> iv(5);
+//    iv.insert(iv.end(), 2, 10);
+//
+//    for (int i = 0; i < iv.size(); ++i)
+//        std::cout << iv[i] << " ";
 //    cout << endl;
 
-    iv.pop_back();
+//    iv.pop_back();
 //    for (int i = 0; i < iv.size(); ++i)
 //        std::cout << iv[i] << " ";
 //    cout << endl;
@@ -206,6 +209,6 @@ int main() {
 //
 //    iv.reserve(30);
 
-    std::cout << "capacity = " << iv.capacity() << std::endl;
+//    std::cout << "capacity = " << iv.capacity() << std::endl;
     return 0;
 }
