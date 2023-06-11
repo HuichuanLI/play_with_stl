@@ -186,7 +186,7 @@ public:
 
 
 int main() {
-    list<int> mylist;
+//    list<int> mylist;
 
 //    vector<int> iv(5);
 //    iv.insert(iv.end(), 2, 10);
@@ -210,5 +210,15 @@ int main() {
 //    iv.reserve(30);
 
 //    std::cout << "capacity = " << iv.capacity() << std::endl;
+
+
+    list<int> slt(5, 3);
+
+    list<int>::iterator it = slt.begin();
+    while (it != slt.end()) {
+        std::cout << *it << "-->";
+        ++it;
+    }
+    std::cout << "Over." << std::endl;
     return 0;
 }

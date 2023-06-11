@@ -44,7 +44,8 @@ public:
 
 public:
     self &operator++() {
-
+        node = (link_type) node->next;
+        return *this;
     }
 
     self operator++(int) {
@@ -112,8 +113,13 @@ public:
 
 public:
     iterator begin() {
-        return node->next;
-//        return (link_type) ((*node).next);
+//        return node->next;
+        return (link_type) ((*node).next);
+    }
+
+    void destroy_node(link_type p) {
+        destroy(&p->data);
+        put_node(p);
     }
 
     iterator end() {
