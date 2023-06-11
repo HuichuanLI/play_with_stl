@@ -7,6 +7,7 @@
 #pragma once
 
 #include"stl_deque.h"
+#include "stl_config.h"
 
 using namespace std;
 
