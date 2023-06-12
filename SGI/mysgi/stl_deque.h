@@ -117,16 +117,16 @@ protected:
             new_nstart = map + (map_size - new_num_nodes) / 2
                          + (add_at_front ? nodes_to_add : 0);
             if (new_nstart < start.node)
-                copy(start.node, finish.node + 1, new_nstart);
+                bss::copy(start.node, finish.node + 1, new_nstart);
             else
-                copy_backward(start.node, finish.node + 1, new_nstart + old_num_nodes);
+                bss::copy_backward(start.node, finish.node + 1, new_nstart + old_num_nodes);
         } else {
             size_type new_map_size = map_size + bss::max(map_size, nodes_to_add) + 2;
 
             map_pointer new_map = map_allocator::allocate(new_map_size);
             new_nstart = new_map + (new_map_size - new_num_nodes) / 2
                          + (add_at_front ? nodes_to_add : 0);
-            copy(start.node, finish.node + 1, new_nstart);
+            bss::copy(start.node, finish.node + 1, new_nstart);
             map_allocator::deallocate(map, map_size);
 
             map = new_map;

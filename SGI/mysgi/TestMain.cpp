@@ -3,7 +3,7 @@
 #include "stl_alloc.h"
 #include "stl_vector.h"
 #include "stl_list.h"
-
+#include "stl_deque.h"
 //using namespace std;
 //
 //namespace my_stl {
@@ -185,40 +185,64 @@ public:
 //}
 
 
+
 int main() {
-//    list<int> mylist;
+    deque<int, alloc, 8> de;
 
-//    vector<int> iv(5);
-//    iv.insert(iv.end(), 2, 10);
-//
-//    for (int i = 0; i < iv.size(); ++i)
-//        std::cout << iv[i] << " ";
-//    cout << endl;
+    de.push_front(1);
+    de.push_front(2);
+    de.push_front(3);
+    de.push_front(4);
+    de.push_front(5);
+    de.push_front(6);
+    de.push_front(7);
+    de.push_front(8);
 
-//    iv.pop_back();
-//    for (int i = 0; i < iv.size(); ++i)
-//        std::cout << iv[i] << " ";
-//    cout << endl;
+    de.push_back(10);
+    de.push_back(20);
+    de.push_back(30);
 
-//    iv.resize(5, 0); // 1 2 0 0 0
-//    for (int i = 0; i < iv.size(); ++i)
-//        cout << iv[i] << " ";
-//    cout << endl;
-//
-//    std::cout << "capacity = " << iv.capacity() << std::endl;
-//
-//    iv.reserve(30);
-
-//    std::cout << "capacity = " << iv.capacity() << std::endl;
-
-
-    list<int> slt(5, 3);
-
-    list<int>::iterator it = slt.begin();
-    while (it != slt.end()) {
-        std::cout << *it << "-->";
+    deque<int>::iterator it = de.begin();
+    while (it != de.end()) {
+        std::cout << *it << " ";
         ++it;
     }
-    std::cout << "Over." << std::endl;
-    return 0;
+    std::cout << std::endl;
 }
+//int main() {
+////    list<int> mylist;
+//
+////    vector<int> iv(5);
+////    iv.insert(iv.end(), 2, 10);
+////
+////    for (int i = 0; i < iv.size(); ++i)
+////        std::cout << iv[i] << " ";
+////    cout << endl;
+//
+////    iv.pop_back();
+////    for (int i = 0; i < iv.size(); ++i)
+////        std::cout << iv[i] << " ";
+////    cout << endl;
+//
+////    iv.resize(5, 0); // 1 2 0 0 0
+////    for (int i = 0; i < iv.size(); ++i)
+////        cout << iv[i] << " ";
+////    cout << endl;
+////
+////    std::cout << "capacity = " << iv.capacity() << std::endl;
+////
+////    iv.reserve(30);
+//
+////    std::cout << "capacity = " << iv.capacity() << std::endl;
+//
+//
+//    list<int> slt(5, 3);
+//
+//    list<int>::iterator it = slt.begin();
+//    while (it != slt.end()) {
+//        std::cout << *it << "-->";
+//        ++it;
+//    }
+//    std::cout << "Over." << std::endl;
+//    return 0;
+//}
