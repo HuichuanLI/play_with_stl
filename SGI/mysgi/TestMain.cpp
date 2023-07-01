@@ -1,12 +1,11 @@
 #include <iostream>
-#include <list>
-#include <vector>
 //#include "stl_alloc.h"
 #include "stl_vector.h"
 //#include "stl_list.h"
 //#include "stl_deque.h"
 #include "stl_heap.h"
-#include <iostream>
+#include "stl_queue.h"
+
 //using namespace std;
 //
 //namespace my_stl {
@@ -259,14 +258,14 @@ int main() {
     for (auto elem: arr)
         iv.push_back(elem);
 
-    make_heap(iv.begin(), iv.end(), std::greater<int>());
+    make_heap(iv.begin(), iv.end());
     for (int i = 0; i < iv.size(); i++) {
         std::cout << iv[i] << std::endl;
     }
     std::cout << std::endl;
 
     iv.push_back(7);
-    push_heap(iv.begin(), iv.end(), std::greater<int>());
+    push_heap(iv.begin(), iv.end());
     for (int i = 0; i < iv.size(); i++) {
         std::cout << iv[i] << std::endl;
     }
@@ -274,9 +273,22 @@ int main() {
 
 //    pop_heap(iv.begin(), iv.end());
 
-    sort_heap(iv.begin(), iv.end(), std::greater<int>());
+    sort_heap(iv.begin(), iv.end());
 
     for (int i = 0; i < iv.size(); i++) {
         std::cout << iv[i] << std::endl;
     }
+
+
+    //vector<int> iv(ar, ar+n);
+
+    int ar[10] = {0, 1, 2, 3, 4, 8, 90, 3, 5};
+
+    priority_queue<int> pq1(ar, ar + n);
+    std::cout << "size = " << pq1.size() << std::endl;
+    std::cout << "empty = " << pq1.empty() << std::endl;
+    std::cout << "top = " << pq1.top() << std:: endl;
+    pq1.push(7);
+
+    pq1.pop();
 }

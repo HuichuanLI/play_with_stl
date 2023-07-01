@@ -8,9 +8,9 @@
 
 #include"stl_vector.h"
 #include"stl_deque.h"
-//#include"stl_heap.h"
+#include"stl_heap.h"
+#include <functional>
 
-using namespace std;
 
 template<class T, class Sequence = deque<T> >
 class queue {
@@ -55,7 +55,7 @@ bool operator<(const queue<T, Sequence> &x, const queue<T, Sequence> &y) {
 
 
 //priority_queue
-template<class T, class Sequence = vector<T>, class Compare = less<typename Sequence::value_type> >
+template<class T, class Sequence = vector<T>, class Compare = std::less<typename Sequence::value_type> >
 class priority_queue {
 public:
     typedef typename Sequence::value_type value_type;
@@ -67,7 +67,7 @@ public:
 
     priority_queue(const Compare &x) : c(), comp(x) {}
 
-    priority_queue(value_type *first, value_type *last) : c(first, last) {
+     priority_queue(value_type *first, value_type *last) : c(first, last) {
         make_heap(c.begin(), c.end());
     }
 

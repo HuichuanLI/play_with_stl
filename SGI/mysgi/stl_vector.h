@@ -169,7 +169,7 @@ private:
 
     iterator allocate_and_copy(size_type n, iterator first, iterator last) {
         iterator result = data_allocator::allocate(n);
-        uninitialized_copy(first, last, result);
+        bss::uninitialized_copy(first, last, result);
         return result;
     }
 
