@@ -1,9 +1,12 @@
 #include <iostream>
 #include <list>
-#include "stl_alloc.h"
+#include <vector>
+//#include "stl_alloc.h"
 #include "stl_vector.h"
-#include "stl_list.h"
-#include "stl_deque.h"
+//#include "stl_list.h"
+//#include "stl_deque.h"
+#include "stl_heap.h"
+#include <iostream>
 //using namespace std;
 //
 //namespace my_stl {
@@ -185,30 +188,30 @@ public:
 //}
 
 
-
-int main() {
-    deque<int, alloc, 8> de;
-
-    de.push_front(1);
-    de.push_front(2);
-    de.push_front(3);
-    de.push_front(4);
-    de.push_front(5);
-    de.push_front(6);
-    de.push_front(7);
-    de.push_front(8);
-
-    de.push_back(10);
-    de.push_back(20);
-    de.push_back(30);
-
-    deque<int>::iterator it = de.begin();
-    while (it != de.end()) {
-        std::cout << *it << " ";
-        ++it;
-    }
-    std::cout << std::endl;
-}
+//
+//int main() {
+//    deque<int, alloc, 8> de;
+//
+//    de.push_front(1);
+//    de.push_front(2);
+//    de.push_front(3);
+//    de.push_front(4);
+//    de.push_front(5);
+//    de.push_front(6);
+//    de.push_front(7);
+//    de.push_front(8);
+//
+//    de.push_back(10);
+//    de.push_back(20);
+//    de.push_back(30);
+//
+//    deque<int>::iterator it = de.begin();
+//    while (it != de.end()) {
+//        std::cout << *it << " ";
+//        ++it;
+//    }
+//    std::cout << std::endl;
+//}
 //int main() {
 ////    list<int> mylist;
 //
@@ -246,3 +249,34 @@ int main() {
 //    std::cout << "Over." << std::endl;
 //    return 0;
 //}
+
+#include <iostream>
+
+int main() {
+    int arr[] = {0, 1, 2, 3, 4, 8, 9, 3, 5,};
+    int n = 9;
+    vector<int> iv;
+    for (auto elem: arr)
+        iv.push_back(elem);
+
+    make_heap(iv.begin(), iv.end(), std::greater<int>());
+    for (int i = 0; i < iv.size(); i++) {
+        std::cout << iv[i] << std::endl;
+    }
+    std::cout << std::endl;
+
+    iv.push_back(7);
+    push_heap(iv.begin(), iv.end(), std::greater<int>());
+    for (int i = 0; i < iv.size(); i++) {
+        std::cout << iv[i] << std::endl;
+    }
+
+
+//    pop_heap(iv.begin(), iv.end());
+
+    sort_heap(iv.begin(), iv.end(), std::greater<int>());
+
+    for (int i = 0; i < iv.size(); i++) {
+        std::cout << iv[i] << std::endl;
+    }
+}

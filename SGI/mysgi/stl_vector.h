@@ -235,7 +235,7 @@ void vector<T, Alloc>::insert_aux(iterator position, const T &x) {
         construct(finish, *(finish - 1));
         ++finish;
         T x_copy = x;
-        copy_backward(position, finish - 2, finish - 1);
+        bss::copy_backward(position, finish - 2, finish - 1);
         *position = x_copy;
     } else {
         const size_type old_size = size();
@@ -243,10 +243,10 @@ void vector<T, Alloc>::insert_aux(iterator position, const T &x) {
         iterator new_start = data_allocator::allocate(len);
         iterator new_finish = new_start;
 
-        new_finish = uninitialized_copy(start, position, new_start);
+        new_finish = bss::uninitialized_copy(start, position, new_start);
         construct(new_finish, x);
         ++new_finish;
-        new_finish = uninitialized_copy(position, finish, new_finish);
+        new_finish = bss::uninitialized_copy(position, finish, new_finish);
 
         destroy(begin(), end());
         deallocate();
