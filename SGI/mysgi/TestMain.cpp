@@ -5,6 +5,7 @@
 //#include "stl_deque.h"
 #include "stl_heap.h"
 #include "stl_queue.h"
+#include "stl_slist.h"
 
 //using namespace std;
 //
@@ -250,45 +251,56 @@ public:
 //}
 
 #include <iostream>
+//
+//int main() {
+//    int arr[] = {0, 1, 2, 3, 4, 8, 9, 3, 5,};
+//    int n = 9;
+//    vector<int> iv;
+//    for (auto elem: arr)
+//        iv.push_back(elem);
+//
+//    make_heap(iv.begin(), iv.end());
+//    for (int i = 0; i < iv.size(); i++) {
+//        std::cout << iv[i] << std::endl;
+//    }
+//    std::cout << std::endl;
+//
+//    iv.push_back(7);
+//    push_heap(iv.begin(), iv.end());
+//    for (int i = 0; i < iv.size(); i++) {
+//        std::cout << iv[i] << std::endl;
+//    }
+//
+//
+////    pop_heap(iv.begin(), iv.end());
+//
+//    sort_heap(iv.begin(), iv.end());
+//
+//    for (int i = 0; i < iv.size(); i++) {
+//        std::cout << iv[i] << std::endl;
+//    }
+//
+//
+//    //vector<int> iv(ar, ar+n);
+//
+//    int ar[10] = {0, 1, 2, 3, 4, 8, 90, 3, 5};
+//
+//    priority_queue<int> pq1(ar, ar + n);
+//    std::cout << "size = " << pq1.size() << std::endl;
+//    std::cout << "empty = " << pq1.empty() << std::endl;
+//    std::cout << "top = " << pq1.top() << std::endl;
+//    pq1.push(7);
+//
+//    pq1.pop();
+//}
 
 int main() {
-    int arr[] = {0, 1, 2, 3, 4, 8, 9, 3, 5,};
-    int n = 9;
-    vector<int> iv;
-    for (auto elem: arr)
-        iv.push_back(elem);
+    slist<int> slt(5, 3);
 
-    make_heap(iv.begin(), iv.end());
-    for (int i = 0; i < iv.size(); i++) {
-        std::cout << iv[i] << std::endl;
+    slist<int>::iterator it = slt.begin();
+    while (it != slt.end()) {
+        std::cout << *it << "-->";
+        ++it;
     }
-    std::cout << std::endl;
-
-    iv.push_back(7);
-    push_heap(iv.begin(), iv.end());
-    for (int i = 0; i < iv.size(); i++) {
-        std::cout << iv[i] << std::endl;
-    }
-
-
-//    pop_heap(iv.begin(), iv.end());
-
-    sort_heap(iv.begin(), iv.end());
-
-    for (int i = 0; i < iv.size(); i++) {
-        std::cout << iv[i] << std::endl;
-    }
-
-
-    //vector<int> iv(ar, ar+n);
-
-    int ar[10] = {0, 1, 2, 3, 4, 8, 90, 3, 5};
-
-    priority_queue<int> pq1(ar, ar + n);
-    std::cout << "size = " << pq1.size() << std::endl;
-    std::cout << "empty = " << pq1.empty() << std::endl;
-    std::cout << "top = " << pq1.top() << std:: endl;
-    pq1.push(7);
-
-    pq1.pop();
+    std::cout << "Over." << std::endl;
 }
