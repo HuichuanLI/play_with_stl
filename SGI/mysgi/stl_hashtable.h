@@ -90,6 +90,18 @@ public:
     typedef HashFcn hasher;
     typedef simple_alloc<node, Alloc> node_allocator;
     typedef __hashtable_iterator<Value, Key, HashFcn, ExtractKey, Alloc> iterator;
+public:
+    iterator begin() {
+        for (size_type n = 0; n < buckets.size(); ++n) {
+            if (buckets[n])
+                return iterator(buckets[n], this);
+        }
+        return end();
+    }
+
+    iterator end() {
+        return iterator(0, this);
+    }
 
 public:
     hashtable(size_type n, const HashFcn &hf)
@@ -188,8 +200,8 @@ private:
     }
 
     size_type bkt_num(const value_type &obj) const {
-        return bkt_num_key(get_key(obj));
-        //return bkt_num_key(obj);
+//        return bkt_num_key(get_key(obj));
+        return bkt_num_key(obj);
     }
 
     size_type bkt_num_key(const key_type &key, size_t n) const {
@@ -197,7 +209,14 @@ private:
     }
 
     size_type bkt_num(const value_type &obj, size_t n) const {
-        return bkt_num_key(get_key(obj), n);
+        return bkt_num_key(obj, n);
+    }
+
+    node *new_node(const value_type &obj) {
+        node *n = node_allocator::allocate();
+        n->next = 0;
+        construct(&n->val, obj);
+        return n;
     }
 
 private:
@@ -205,6 +224,6 @@ private:
     ExtractKey get_key;
     vector<node *, Alloc> buckets; //数组 桶
     size_type num_elements;
-}
+};
 
 #endif //PLAY_WITH_ALGO_STL__HASHTABLE_H

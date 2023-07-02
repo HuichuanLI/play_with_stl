@@ -50,7 +50,7 @@ struct __slist_iterator : public __slist_iterator_base {
     __slist_iterator() : __slist_iterator_base(0) {}
 
     reference operator*() {
-        return ((list_node *)  )->data;
+        return ((list_node *) node)->data;
     }
 
     self &operator++() {

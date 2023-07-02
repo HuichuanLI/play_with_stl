@@ -6,6 +6,7 @@
 #include "stl_heap.h"
 #include "stl_queue.h"
 #include "stl_slist.h"
+#include "stl_hashtable.h"
 
 //using namespace std;
 //
@@ -294,13 +295,48 @@ public:
 //    pq1.pop();
 //}
 
-int main() {
-    slist<int> slt(5, 3);
+//int main() {
+//    slist<int> slt(5, 3);
+//
+//    slist<int>::iterator it = slt.begin();
+//    while (it != slt.end()) {
+//        std::cout << *it << "-->";
+//        ++it;
+//    }
+//    std::cout << "Over." << std::endl;
+//}
+struct Test {
+    char a;
+    double b;
+    int c;
 
-    slist<int>::iterator it = slt.begin();
-    while (it != slt.end()) {
-        std::cout << *it << "-->";
+    bool operator==(const Test &t) {
+        return c == t.c;
+    }
+};
+
+
+struct MyGetKey {
+    int operator()(const Test &t) const {
+        return t.c;
+    }
+};
+
+
+int main() {
+    hashtable<int, int, bss::hash<int>, alloc> ht(7, bss::hash<int>());
+    ht.insert_equal(1);
+    ht.insert_equal(8);
+    ht.insert_equal(4);
+    ht.insert_equal(15);
+    ht.insert_equal(22);
+    ht.insert_equal(3);
+    ht.insert_equal(8);
+
+    hashtable<int, int, bss::hash<int>, alloc>::iterator it = ht.begin();
+    while (it != ht.end()) {
+        std::cout << *it << " ";
         ++it;
     }
-    std::cout << "Over." << std::endl;
+    std::cout << std::endl;
 }
