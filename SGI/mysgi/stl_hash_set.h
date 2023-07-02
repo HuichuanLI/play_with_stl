@@ -30,7 +30,7 @@ public:
 };
 
 
-template<class Value, class HashFcn = hash <Value>, class Alloc = alloc>
+template<class Value, class HashFcn = bss::hash<Value>, class Alloc = alloc>
 class hash_multiset {
 private:
     typedef hashtable<Value, Value, HashFcn, Alloc> ht;

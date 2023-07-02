@@ -7,6 +7,7 @@
 #include "stl_queue.h"
 #include "stl_slist.h"
 #include "stl_hashtable.h"
+#include "stl_hash_set.h"
 
 //using namespace std;
 //
@@ -323,18 +324,35 @@ struct MyGetKey {
 };
 
 
-int main() {
-    hashtable<int, int, bss::hash<int>, alloc> ht(7, bss::hash<int>());
-    ht.insert_equal(1);
-    ht.insert_equal(8);
-    ht.insert_equal(4);
-    ht.insert_equal(15);
-    ht.insert_equal(22);
-    ht.insert_equal(3);
-    ht.insert_equal(8);
+//int main() {
+//    hashtable<int, int, bss::hash<int>, alloc> ht(7, bss::hash<int>());
+//    ht.insert_equal(1);
+//    ht.insert_equal(8);
+//    ht.insert_equal(4);
+//    ht.insert_equal(15);
+//    ht.insert_equal(22);
+//    ht.insert_equal(3);
+//    ht.insert_equal(8);
+//
+//    hashtable<int, int, bss::hash<int>, alloc>::iterator it = ht.begin();
+//    while (it != ht.end()) {
+//        std::cout << *it << " ";
+//        ++it;
+//    }
+//    std::cout << std::endl;
+//}
 
-    hashtable<int, int, bss::hash<int>, alloc>::iterator it = ht.begin();
-    while (it != ht.end()) {
+int main() {
+    hash_multiset<int> hs;
+
+    int ar[] = {10, 7, 8, 15, 5, 6, 8, 9, 7, 13, 12, 10, 11, 13, 12};
+    int n = sizeof(ar) / sizeof(ar[0]);
+
+    for (int i = 0; i < n; ++i)
+        hs.insert(ar[i]);
+
+    hash_multiset<int>::iterator it = hs.begin();
+    while (it != hs.end()) {
         std::cout << *it << " ";
         ++it;
     }
