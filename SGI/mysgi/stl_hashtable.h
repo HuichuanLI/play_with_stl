@@ -200,8 +200,8 @@ private:
     }
 
     size_type bkt_num(const value_type &obj) const {
-//        return bkt_num_key(get_key(obj));
-        return bkt_num_key(obj);
+        return bkt_num_key(get_key(obj));
+//        return bkt_num_key(obj);
     }
 
     size_type bkt_num_key(const key_type &key, size_t n) const {
@@ -209,7 +209,7 @@ private:
     }
 
     size_type bkt_num(const value_type &obj, size_t n) const {
-        return bkt_num_key(obj, n);
+        return bkt_num_key(get_key(obj), n);
     }
 
     node *new_node(const value_type &obj) {

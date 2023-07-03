@@ -362,16 +362,39 @@ struct MyGetKey {
 //    std::cout << std::endl;
 //}
 
-int main() {
-    hash_map<int, int> hm;
+//int main() {
+//    hash_map<int, int> hm;
+//
+//    std::pair<const int, int> v[] = {{1, 100},
+//                                     {3, 300},
+//                                     {2, 200},
+//                                     {4, 400}};
+//    int n = sizeof(v) / sizeof(v[0]);
+//
+//    for (int i = 0; i < n; ++i)
+//        hm.insert(v[i]);
+//
+//}
 
-    std::pair<const int, int> v[] = {{1, 100},
-                                {3, 300},
-                                {2, 200},
-                                {4, 400}};
+int main() {
+    hash_multimap<int, int> hm;
+
+    std::pair<const int, int> v[] = {{1,  100},
+                                {30, 300},
+                                {2,  200},
+                                {4,  400},
+                                {1,  100},
+                                {30, 300},
+                                {2,  200},
+                                {4,  400}};
     int n = sizeof(v) / sizeof(v[0]);
 
     for (int i = 0; i < n; ++i)
         hm.insert(v[i]);
 
+    hash_multimap<int, int>::iterator it = hm.begin();
+    while (it != hm.end()) {
+        std::cout << (*it).first << " : " << (*it).second << std::endl;
+        ++it;
+    }
 }

@@ -33,8 +33,8 @@ public:
 template<class Key, class T, class HashFcn = bss::hash<Key>, class Alloc = alloc>
 class hash_multimap {
 private:
-    typedef hashtable<pair<const Key, T>, Key, HashFcn,
-            select1st<pair<const Key, T>>, Alloc> ht;
+    typedef hashtable<std::pair<const Key, T>, Key, HashFcn,
+            select1st<std::pair<const Key, T>>, Alloc> ht;
     ht rep;
 public:
     typedef typename ht::value_type value_type;  //pair<Key, T>
