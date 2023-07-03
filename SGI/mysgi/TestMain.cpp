@@ -1,4 +1,5 @@
 #include <iostream>
+#include  <utility>
 //#include "stl_alloc.h"
 #include "stl_vector.h"
 //#include "stl_list.h"
@@ -8,6 +9,8 @@
 #include "stl_slist.h"
 #include "stl_hashtable.h"
 #include "stl_hash_set.h"
+#include "stl_hashtable.h"
+#include "stl_hash_map.h"
 
 //using namespace std;
 //
@@ -342,19 +345,33 @@ struct MyGetKey {
 //    std::cout << std::endl;
 //}
 
-int main() {
-    hash_multiset<int> hs;
+//int main() {
+//    hash_multiset<int> hs;
+//
+//    int ar[] = {10, 7, 8, 15, 5, 6, 8, 9, 7, 13, 12, 10, 11, 13, 12};
+//    int n = sizeof(ar) / sizeof(ar[0]);
+//
+//    for (int i = 0; i < n; ++i)
+//        hs.insert(ar[i]);
+//
+//    hash_multiset<int>::iterator it = hs.begin();
+//    while (it != hs.end()) {
+//        std::cout << *it << " ";
+//        ++it;
+//    }
+//    std::cout << std::endl;
+//}
 
-    int ar[] = {10, 7, 8, 15, 5, 6, 8, 9, 7, 13, 12, 10, 11, 13, 12};
-    int n = sizeof(ar) / sizeof(ar[0]);
+int main() {
+    hash_map<int, int> hm;
+
+    std::pair<const int, int> v[] = {{1, 100},
+                                {3, 300},
+                                {2, 200},
+                                {4, 400}};
+    int n = sizeof(v) / sizeof(v[0]);
 
     for (int i = 0; i < n; ++i)
-        hs.insert(ar[i]);
+        hm.insert(v[i]);
 
-    hash_multiset<int>::iterator it = hs.begin();
-    while (it != hs.end()) {
-        std::cout << *it << " ";
-        ++it;
-    }
-    std::cout << std::endl;
 }
