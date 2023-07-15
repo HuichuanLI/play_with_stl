@@ -376,25 +376,180 @@ struct MyGetKey {
 //
 //}
 
-int main() {
-    hash_multimap<int, int> hm;
+//int main() {
+//    hash_multimap<int, int> hm;
+//
+//    std::pair<const int, int> v[] = {{1,  100},
+//                                {30, 300},
+//                                {2,  200},
+//                                {4,  400},
+//                                {1,  100},
+//                                {30, 300},
+//                                {2,  200},
+//                                {4,  400}};
+//    int n = sizeof(v) / sizeof(v[0]);
+//
+//    for (int i = 0; i < n; ++i)
+//        hm.insert(v[i]);
+//
+//    hash_multimap<int, int>::iterator it = hm.begin();
+//    while (it != hm.end()) {
+//        std::cout << (*it).first << " : " << (*it).second << std::endl;
+//        ++it;
+//    }
+//}
 
-    std::pair<const int, int> v[] = {{1,  100},
-                                {30, 300},
-                                {2,  200},
-                                {4,  400},
-                                {1,  100},
-                                {30, 300},
-                                {2,  200},
-                                {4,  400}};
-    int n = sizeof(v) / sizeof(v[0]);
+#include <numeric>
+#include <set>
 
-    for (int i = 0; i < n; ++i)
-        hm.insert(v[i]);
+//int main() {
+//    std::vector<int> iv = {1, 2, 3, 4, 5};
+//    std::cout << std::accumulate(iv.begin(), iv.end(), 100) << std::endl;  //[  )
+//    std::cout << accumulate(iv.begin(), iv.end(), 0, std::minus<int>()) << std::endl;  //[  )
+//
+//}
 
-    hash_multimap<int, int>::iterator it = hm.begin();
-    while (it != hm.end()) {
-        std::cout << (*it).first << " : " << (*it).second << std::endl;
-        ++it;
+//int main() {
+//    std::vector<int> iv = {1, 2, 30, 4, 5};
+//    int res[5] = {0};
+//    adjacent_difference(iv.begin(), iv.end(), res);
+//}
+
+
+//int main()
+//{
+//    std::vector<int> iv =  { 1, 2, 3, 4, 5 };
+//
+//    std::vector<int> iv1 = { 2, 2, 5 };
+//
+//    std::cout << inner_product(iv.begin(), iv.end(), iv1.begin(), 0) << std::endl;
+//}
+
+//int main() {
+//    std::vector<int> iv = {1, 2, 3, 4, 5};
+//    int res[5] = {0};
+//
+//    partial_sum(iv.begin(), iv.end(), res);
+//    std::cout << pow(10, 5) << std::endl;
+//
+//}
+
+//int main()
+//{
+//    std::vector<int> v1 = { 1, 3, 5, 7, 9 };
+//    std::vector<int> v2 = { 2, 4, 6, 8, 10 };
+//
+//    std::vector<int> res(v1.size() + v2.size());
+//
+//    set_union(v1.begin(), v1.end(), v2.begin(), v2.end(), res.begin());
+//}
+
+//int main() {
+//    std::multiset<int> s1 = {1, 1, 3, 5, 7, 9};
+//    std::multiset<int> s2 = {1, 2, 4, 6, 8, 10};
+//
+//    std::vector<int> res(s1.size() + s2.size());
+//    set_union(s1.begin(), s1.end(), s2.begin(), s2.end(), res.begin());
+////    set_union(s1.begin(), s1.end(), s2.begin(), s2.end(), ostream_iterator<int>(std::cout," "));
+//}
+
+//int main()
+//{
+//    std::vector<int> v = { 5, 8, 2, 4, 3, 1, 9, 7 };
+//    //std::make_heap(v.begin(), v.end(), greater<int>());
+//    std::make_heap(v.begin(), v.end());
+//
+//    v.push_back(16);
+//    std::push_heap(v.begin(), v.end());
+//
+//    std::pop_heap(v.begin(), v.end());
+//    v.pop_back();
+//
+//    std::sort_heap(v.begin(), v.end());
+//}
+
+
+/*
+void main()
+{
+	std::multiset<int> v1 = { 1, 1, 1,3, 5, 7, 9 };
+	std::multiset<int> v2 = { 1, 3, 4, 6, 8 };
+	set_difference(v1.begin(), v1.end(), v2.begin(), v2.end(), ostream_iterator<int>(cout, " "));
+}
+*/
+
+struct lessto5 {
+    bool operator()(int &x) {
+        return x < 5;
     }
+};
+
+//int main()
+//{
+//    std::vector<int> v = { 0, 1, 2, 3, 4, 5, 6, 6, 6, 7, 8 };
+//    //cout<<count(v.begin(), v.end(), 3)<<endl;
+//    //cout << count_if(v.begin(), v.end(), lessto5()) << endl;
+//    std::cout << count_if(v.begin(), v.end(), bind2nd(std::less<int>(), 6)) << std::endl;
+//}
+//
+//class even_by_two
+//{
+//public:
+//    int operator()()const
+//    {
+//        return _x += 2;
+//    }
+//private:
+//    static int _x;
+//};
+//int even_by_two::_x = 0;
+
+class even_by_two {
+public:
+    int operator()() const {
+        return _x += 2;
+    }
+
+private:
+    static int _x;
+};
+
+int even_by_two::_x = 0;
+
+struct display {
+    void operator()(int &x) {
+        std::cout << x << " ";
+    }
+};
+
+
+int main() {
+
+    std::vector<int> iv1(10);
+
+    //generate(iv1.begin(), iv1.end(), even_by_two());  //
+
+    generate_n(iv1.begin(), 5, even_by_two());
+
+    int ar[] = {0, 1, 4, 5, 6, 2, 3, 4, 5, 6, 6, 6, 7, 8};
+    int n = sizeof(ar) / sizeof(ar[0]);
+
+    std::for_each(ar, ar + n, display());
+
+//    int ar[] = { 0, 1, 2, 3, 4, 5, 6, 6, 6, 7, 8 };
+//    int n = sizeof(ar) / sizeof(ar[0]);
+//    std::vector<int> iv1(ar, ar + n);
+
+    auto pos = remove(iv1.begin(), iv1.end(), 6);
+    //iv1.erase(pos, iv1.end());
+    remove_if(iv1.begin(), iv1.end(), bind2nd(std::less<int>(), 6));
+    std::vector<int> iv2(8);
+
+    remove_copy_if(iv1.begin(), iv1.end(), iv2.begin(), bind2nd(std::less<int>(), 6));
+
+    //replace(iv1.begin(), iv1.end(), 6, 3);
+    //replace_if(iv1.begin(), iv1.end(), bind2nd(less<int>(), 6), 9);
+    //replace_copy(iv1.begin(), iv1.end(), iv2.begin(), 6, 3);
+    replace_copy_if(iv1.begin(), iv1.end(), iv2.begin(), bind2nd(std::less<int>(), 6), 3);
+
 }
