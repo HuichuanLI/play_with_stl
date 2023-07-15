@@ -401,6 +401,7 @@ struct MyGetKey {
 
 #include <numeric>
 #include <set>
+#include <fstream>
 
 //int main() {
 //    std::vector<int> iv = {1, 2, 3, 4, 5};
@@ -523,33 +524,151 @@ struct display {
 };
 
 
-int main() {
-
-    std::vector<int> iv1(10);
-
-    //generate(iv1.begin(), iv1.end(), even_by_two());  //
-
-    generate_n(iv1.begin(), 5, even_by_two());
-
-    int ar[] = {0, 1, 4, 5, 6, 2, 3, 4, 5, 6, 6, 6, 7, 8};
-    int n = sizeof(ar) / sizeof(ar[0]);
-
-    std::for_each(ar, ar + n, display());
-
-//    int ar[] = { 0, 1, 2, 3, 4, 5, 6, 6, 6, 7, 8 };
+//int main() {
+//
+//    std::vector<int> iv1(10);
+//
+//    //generate(iv1.begin(), iv1.end(), even_by_two());  //
+//
+//    generate_n(iv1.begin(), 5, even_by_two());
+//
+//    int ar[] = {0, 1, 4, 5, 6, 2, 3, 4, 5, 6, 6, 6, 7, 8};
 //    int n = sizeof(ar) / sizeof(ar[0]);
-//    std::vector<int> iv1(ar, ar + n);
+//
+//    std::for_each(ar, ar + n, display());
+//
+////    int ar[] = { 0, 1, 2, 3, 4, 5, 6, 6, 6, 7, 8 };
+////    int n = sizeof(ar) / sizeof(ar[0]);
+////    std::vector<int> iv1(ar, ar + n);
+//
+//    auto pos = remove(iv1.begin(), iv1.end(), 6);
+//    //iv1.erase(pos, iv1.end());
+//    remove_if(iv1.begin(), iv1.end(), bind2nd(std::less<int>(), 6));
+//    std::vector<int> iv2(8);
+//
+//    remove_copy_if(iv1.begin(), iv1.end(), iv2.begin(), bind2nd(std::less<int>(), 6));
+//
+//    //replace(iv1.begin(), iv1.end(), 6, 3);
+//    //replace_if(iv1.begin(), iv1.end(), bind2nd(less<int>(), 6), 9);
+//    //replace_copy(iv1.begin(), iv1.end(), iv2.begin(), 6, 3);
+//    replace_copy_if(iv1.begin(), iv1.end(), iv2.begin(), bind2nd(std::less<int>(), 6), 3);
+//
+//}
 
-    auto pos = remove(iv1.begin(), iv1.end(), 6);
-    //iv1.erase(pos, iv1.end());
-    remove_if(iv1.begin(), iv1.end(), bind2nd(std::less<int>(), 6));
-    std::vector<int> iv2(8);
+//template<class _Ty = void>
+//struct plus
+//{
+//	//???????¡§??
+//	result_type operator()(const first_argument_type& _Left, const second_argument_type& _Right) const
+//	{
+//		return (_Left + _Right);
+//	}
+//};
 
-    remove_copy_if(iv1.begin(), iv1.end(), iv2.begin(), bind2nd(std::less<int>(), 6));
 
-    //replace(iv1.begin(), iv1.end(), 6, 3);
-    //replace_if(iv1.begin(), iv1.end(), bind2nd(less<int>(), 6), 9);
-    //replace_copy(iv1.begin(), iv1.end(), iv2.begin(), 6, 3);
-    replace_copy_if(iv1.begin(), iv1.end(), iv2.begin(), bind2nd(std::less<int>(), 6), 3);
+//int main() {
+//    //plus<int> pl;
+//
+//    //pl(10,20) ==> pl.operator()(10,20)
+//    std::cout << std::plus<int>()(10, 20) << std::endl;
+//    std::vector<int> iv = {8, 5, 4, 6, 7, 6, 2, 1, 6, 9, 3};
+//
+//    sort(iv.begin(), iv.end(), std::less<int>());
+//}
 
+//int main() {
+//    using namespace std;
+//    std::vector<int> iv = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+//    for (int i = 0; i < iv.size(); ++i)
+//        cout << iv[i] << " ";
+//    cout << endl;
+//
+//    //std::vector<int>::iterator it = iv.begin();
+//    auto it = iv.begin();
+//    while (it != iv.end()) {
+//        cout << *it << " ";
+//        ++it;
+//    }
+//    cout << endl;
+//
+//    for (const int &e: iv)
+//        cout << e << " ";
+//    cout << endl;
+//
+//    copy(iv.begin(), iv.end(), ostream_iterator<int>(cout, " "));
+//
+////    ofstream ofile("MyTest.txt", ios::out);
+////    copy(iv.begin(), iv.end(), ostream_iterator<int>(ofile, " "));
+////    ofile.close();
+//}
+
+//int main() {
+//    using namespace std;
+//    ostream_iterator<int> outite(cout, " ");
+//    deque<int> id = {0, 1, 2, 3, 4, 5};
+//
+//    copy(id.begin(), id.end(), outite);
+//    cout << endl;
+//
+//    int ar[] = {10, 20, 30, 40, 50, 60, 70, 80, 90};
+//
+//    //20 30
+//    copy(ar + 1, ar + 3, front_inserter(id)); //30, 20, 0, 1, 2, 3, 4, 5
+//    copy(id.begin(), id.end(), outite);
+//    cout << endl;
+//
+//    //50, 60
+//    copy(ar + 4, ar + 6, back_inserter(id));//30, 20, 0, 1, 2, 3, 4, 5 50 60
+//    copy(id.begin(), id.end(), outite);
+//    cout << endl;
+//
+//    //10 20
+//    auto ite = find(id.begin(), id.end(), 3);
+//    copy(ar, ar + 2, inserter(id, ite)); //30, 20, 0, 1, 2, 10, 20, 3, 4, 5 50 60
+//    copy(id.begin(), id.end(), outite);
+//    cout << endl;
+//}
+
+class Shape {
+public:
+    virtual void display() = 0;
+};
+
+class Rect : public Shape {
+public:
+    virtual void display() {
+        std::cout << "Rect ";
+    }
+};
+
+class Circle : public Shape {
+public:
+    virtual void display() {
+        std::cout << "Circle ";
+    }
+};
+
+class Square : public Shape {
+public:
+    virtual void display() {
+        std::cout << "Square ";
+    }
+};
+
+int main() {
+    using namespace std;
+    std::vector<Shape *> v;
+
+    v.push_back(new Rect);
+    v.push_back(new Circle);
+    v.push_back(new Square);
+    v.push_back(new Circle);
+    v.push_back(new Rect);
+
+    for (int i = 0; i < v.size(); ++i)
+        v[i]->display();
+    cout << endl;
+
+    for_each(v.begin(), v.end(), mem_fun(&Shape::display));
+    cout << endl;
 }
